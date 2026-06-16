@@ -1,0 +1,54 @@
+/* Lifecycle Demo Component Styles */
+.lifecycle-demo-container {
+  background: #f8f9fa;
+  min-height: 400px;
+}
+
+.log-container {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+.log-entry {
+  padding: 4px 0;
+  border-bottom: 1px solid #334155;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.accordion-button {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.log-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.log-container::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+.log-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

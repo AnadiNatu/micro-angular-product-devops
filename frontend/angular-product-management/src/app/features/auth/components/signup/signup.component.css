@@ -1,0 +1,138 @@
+/* Enhanced Signup Component Styles */
+
+/* Page Background */
+.signup-page {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.signup-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 30s linear infinite;
+}
+
+/* Signup Card */
+.signup-card {
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.5s ease;
+}
+
+/* Gradient Header */
+.bg-gradient-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Signup Icon */
+.signup-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto;
+}
+
+/* Form Controls */
+.form-control {
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+/* Buttons */
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+/* Password Strength Progress Bar */
+.progress {
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Input Group */
+.input-group .btn-outline-secondary {
+  border-left: none;
+  border-color: #e5e7eb;
+}
+
+.input-group .form-control:focus + .btn-outline-secondary {
+  border-color: #10b981;
+}
+
+/* Links */
+a {
+  color: #10b981;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #059669;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .signup-card {
+    margin: 1rem;
+  }
+
+  .signup-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .card-header h3 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,111 @@
+<!-- Lifecycle Demo Component -->
+<div class="lifecycle-demo-container p-4">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-warning text-dark">
+      <h5 class="mb-0">
+        <i class="bi bi-diagram-3 me-2"></i>
+        Angular Lifecycle Hooks Demo
+      </h5>
+    </div>
+    
+    <div class="card-body">
+      <!-- Info Section -->
+      <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Educational Component:</strong> This component demonstrates all 8 Angular lifecycle hooks.
+        Open the browser console to see detailed logs.
+      </div>
+
+      <!-- Counter Display -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded">
+            <div class="text-muted small mb-1">Counter (updates every 2s)</div>
+            <div class="fs-4 fw-bold text-primary">{{ counter }}</div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded">
+            <div class="text-muted small mb-1">Input Data</div>
+            <div class="fw-semibold">{{ demoData }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lifecycle Logs -->
+      <div class="lifecycle-logs">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0">Lifecycle Event Logs</h6>
+          <button class="btn btn-sm btn-outline-secondary" (click)="clearLogs()">
+            <i class="bi bi-trash me-1"></i> Clear Logs
+          </button>
+        </div>
+
+        <div class="log-container bg-dark text-light p-3 rounded" style="max-height: 300px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.875rem;">
+          @if (lifecycleLogs.length > 0) {
+            @for (log of lifecycleLogs; track $index) {
+              <div class="log-entry mb-1">{{ log }}</div>
+            }
+          } @else {
+            <div class="text-muted">No lifecycle events logged yet...</div>
+          }
+        </div>
+      </div>
+
+      <!-- Hook Descriptions -->
+      <div class="mt-4">
+        <h6 class="mb-3">Lifecycle Hook Descriptions</h6>
+        <div class="accordion" id="lifecycleAccordion">
+          <!-- Constructor -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#constructor">
+                🔧 constructor()
+              </button>
+            </h2>
+            <div id="constructor" class="accordion-collapse collapse" data-bs-parent="#lifecycleAccordion">
+              <div class="accordion-body small">
+                <strong>Purpose:</strong> Component instantiation<br>
+                <strong>Use for:</strong> Dependency injection, basic initialization<br>
+                <strong>Avoid:</strong> Complex logic, HTTP calls, DOM manipulation
+              </div>
+            </div>
+          </div>
+
+          <!-- ngOnInit -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ngOnInit">
+                ✅ ngOnInit()
+              </button>
+            </h2>
+            <div id="ngOnInit" class="accordion-collapse collapse" data-bs-parent="#lifecycleAccordion">
+              <div class="accordion-body small">
+                <strong>Purpose:</strong> Component initialization (called once)<br>
+                <strong>Use for:</strong> HTTP calls, subscriptions, complex initialization<br>
+                <strong>Best Practice:</strong> Most initialization logic goes here
+              </div>
+            </div>
+          </div>
+
+          <!-- ngOnDestroy -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ngOnDestroy">
+                🗑️ ngOnDestroy()
+              </button>
+            </h2>
+            <div id="ngOnDestroy" class="accordion-collapse collapse" data-bs-parent="#lifecycleAccordion">
+              <div class="accordion-body small">
+                <strong>Purpose:</strong> Cleanup before component destruction<br>
+                <strong>Use for:</strong> Unsubscribe observables, clear timers, remove listeners<br>
+                <strong>Critical:</strong> Prevents memory leaks
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

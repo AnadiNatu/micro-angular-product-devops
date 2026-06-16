@@ -1,0 +1,231 @@
+<!-- Create Order Component -->
+<div class="create-order-container">
+  <!-- Page Header -->
+  <div class="mb-4">
+    <h2 class="mb-1 fw-bold">
+      <i class="bi bi-plus-circle me-2 text-success"></i>
+      Create New Order
+    </h2>
+    <p class="text-muted mb-0">Create a new customer order</p>
+  </div>
+
+  <!-- Create Order Form -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-gradient-success text-white py-3">
+          <h5 class="mb-0">
+            <i class="bi bi-info-circle me-2"></i>
+            Order Details
+          </h5>
+        </div>
+
+        <div class="card-body p-4">
+          <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+            <!-- Product Selection -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-box-seam me-2 text-success"></i>
+                Product
+                <span class="text-danger">*</span>
+              </label>
+              <select 
+                class="form-select form-select-lg"
+                [class.is-invalid]="hasError('productName')"
+                formControlName="productName"
+                (change)="onProductSelect()">
+                <option value="">Select a product</option>
+                @for (product of products; track product.productId) {
+                  <option [value]="product.productName">
+                    {{ product.productName }} - {{ product.price | customCurrency }} 
+                    (Stock: {{ product.productInventory }})
+                  </option>
+                }
+              </select>
+              
+              @if (hasError('productName')) {
+                <div class="invalid-feedback">
+                  {{ getErrorMessage('productName') }}
+                </div>
+              }
+            </div>
+
+            <!-- Selected Product Info -->
+            @if (selectedProduct) {
+              <div class="alert alert-info mb-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <small class="text-muted d-block">Product Price</small>
+                    <strong>{{ selectedProduct.price | customCurrency }}</strong>
+                  </div>
+                  <div class="col-md-6">
+                    <small class="text-muted d-block">Available Stock</small>
+                    <strong>{{ selectedProduct.productInventory }} units</strong>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- Order Quantity -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-hash me-2 text-success"></i>
+                Order Quantity
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="number" 
+                class="form-control form-control-lg"
+                [class.is-invalid]="hasError('orderQuantity')"
+                formControlName="orderQuantity"
+                min="1"
+                placeholder="Enter quantity">
+              
+              @if (hasError('orderQuantity')) {
+                <div class="invalid-feedback">
+                  {{ getErrorMessage('orderQuantity') }}
+                </div>
+              }
+            </div>
+
+            <!-- Dates Row -->
+            <div class="row">
+              <!-- Estimated Delivery Date -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-calendar-event me-2 text-success"></i>
+                  Estimated Delivery Date
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="date" 
+                  class="form-control form-control-lg"
+                  [class.is-invalid]="hasError('estimateDeliveryDate')"
+                  formControlName="estimateDeliveryDate">
+                
+                @if (hasError('estimateDeliveryDate')) {
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage('estimateDeliveryDate') }}
+                  </div>
+                }
+              </div>
+
+              <!-- Actual Delivery Date -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-calendar-check me-2 text-success"></i>
+                  Actual Delivery Date
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="date" 
+                  class="form-control form-control-lg"
+                  [class.is-invalid]="hasError('deliveryDate')"
+                  formControlName="deliveryDate">
+                
+                @if (hasError('deliveryDate')) {
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage('deliveryDate') }}
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Order Status -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-flag me-2 text-success"></i>
+                Order Status
+                <span class="text-danger">*</span>
+              </label>
+              <select 
+                class="form-select form-select-lg"
+                formControlName="orderStatus">
+                @for (status of statusOptions; track status) {
+                  <option [value]="status">{{ status }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between mt-4">
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary btn-lg"
+                (click)="cancel()"
+                [disabled]="isSubmitting">
+                <i class="bi bi-x-circle me-2"></i>
+                Cancel
+              </button>
+
+              <button 
+                type="submit" 
+                class="btn btn-success btn-lg"
+                [disabled]="isSubmitting || orderForm.invalid">
+                @if (isSubmitting) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Creating...
+                } @else {
+                  <i class="bi bi-check-circle me-2"></i>
+                  Create Order
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar - Help -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+        <div class="card-body">
+          <h6 class="fw-bold text-success mb-3">
+            <i class="bi bi-lightbulb me-2"></i>
+            Order Guidelines
+          </h6>
+          <ul class="small text-muted mb-0 ps-3">
+            <li class="mb-2">Select a product with sufficient stock</li>
+            <li class="mb-2">Ensure quantity doesn't exceed inventory</li>
+            <li class="mb-2">Set realistic delivery dates</li>
+            <li class="mb-2">Choose appropriate order status</li>
+            <li class="mb-2">Estimated date should be before actual delivery</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      @if (selectedProduct && orderForm.get('orderQuantity')?.valid) {
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-header bg-white border-0">
+            <h6 class="mb-0 fw-bold">
+              <i class="bi bi-receipt me-2 text-success"></i>
+              Order Summary
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Product:</span>
+              <strong>{{ selectedProduct.productName }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Unit Price:</span>
+              <strong>{{ selectedProduct.price | customCurrency }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Quantity:</span>
+              <strong>{{ orderForm.get('orderQuantity')?.value }}</strong>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold">Total:</span>
+              <span class="fw-bold text-success fs-5">
+                {{ (selectedProduct.price * orderForm.get('orderQuantity')?.value) | customCurrency }}
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

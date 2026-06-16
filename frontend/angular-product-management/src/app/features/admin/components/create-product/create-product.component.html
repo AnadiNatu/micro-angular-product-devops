@@ -1,0 +1,224 @@
+<!-- Create Product Component -->
+<div class="create-product-container">
+  <!-- Page Header -->
+  <div class="mb-4">
+    <h2 class="mb-1 fw-bold">
+      <i class="bi bi-plus-circle me-2 text-primary"></i>
+      Create New Product
+    </h2>
+    <p class="text-muted mb-0">Add a new product to your inventory</p>
+  </div>
+
+  <!-- Create Product Form -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-gradient-primary text-white py-3">
+          <h5 class="mb-0">
+            <i class="bi bi-info-circle me-2"></i>
+            Product Information
+          </h5>
+        </div>
+
+        <div class="card-body p-4">
+          <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <!-- Product Name -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-tag me-2 text-primary"></i>
+                Product Name
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control form-control-lg"
+                [class.is-invalid]="hasError('productName')"
+                formControlName="productName"
+                placeholder="Enter product name">
+              
+              @if (hasError('productName')) {
+                <div class="invalid-feedback">
+                  {{ getErrorMessage('productName') }}
+                </div>
+              }
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-grid me-2 text-primary"></i>
+                Category
+                <span class="text-danger">*</span>
+              </label>
+              <select 
+                class="form-select form-select-lg"
+                formControlName="category">
+                @for (category of categories; track category) {
+                  <option [value]="category">{{ category }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">
+                <i class="bi bi-text-paragraph me-2 text-primary"></i>
+                Description
+                <span class="text-danger">*</span>
+              </label>
+              <textarea 
+                class="form-control"
+                [class.is-invalid]="hasError('productDesc')"
+                formControlName="productDesc"
+                rows="4"
+                placeholder="Enter product description"></textarea>
+              
+              @if (hasError('productDesc')) {
+                <div class="invalid-feedback">
+                  {{ getErrorMessage('productDesc') }}
+                </div>
+              }
+              
+              <small class="text-muted">
+                {{ productForm.get('productDesc')?.value?.length || 0 }} characters
+              </small>
+            </div>
+
+            <!-- Price & Inventory Row -->
+            <div class="row">
+              <!-- Price -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-currency-dollar me-2 text-primary"></i>
+                  Price (USD)
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="number" 
+                  class="form-control form-control-lg"
+                  [class.is-invalid]="hasError('price')"
+                  formControlName="price"
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0">
+                
+                @if (hasError('price')) {
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage('price') }}
+                  </div>
+                }
+              </div>
+
+              <!-- Inventory -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-box-seam me-2 text-primary"></i>
+                  Inventory
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="number" 
+                  class="form-control form-control-lg"
+                  [class.is-invalid]="hasError('productInventory')"
+                  formControlName="productInventory"
+                  placeholder="0"
+                  min="0">
+                
+                @if (hasError('productInventory')) {
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage('productInventory') }}
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between mt-4">
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary btn-lg"
+                (click)="cancel()"
+                [disabled]="isSubmitting">
+                <i class="bi bi-x-circle me-2"></i>
+                Cancel
+              </button>
+
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg"
+                [disabled]="isSubmitting || productForm.invalid">
+                @if (isSubmitting) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Creating...
+                } @else {
+                  <i class="bi bi-check-circle me-2"></i>
+                  Create Product
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar - Preview & Help -->
+    <div class="col-lg-4">
+      <!-- Image Upload -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 py-3">
+          <h6 class="mb-0 fw-bold">
+            <i class="bi bi-image me-2 text-primary"></i>
+            Product Image
+          </h6>
+        </div>
+        <div class="card-body text-center">
+          @if (imagePreview) {
+            <div class="position-relative d-inline-block">
+              <img 
+                [src]="imagePreview" 
+                class="img-fluid rounded mb-3"
+                style="max-height: 200px;">
+              <button 
+                class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                (click)="removeImage()">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          } @else {
+            <div class="bg-light rounded p-5 mb-3">
+              <i class="bi bi-image fs-1 text-muted"></i>
+              <p class="text-muted small mb-0 mt-2">No image selected</p>
+            </div>
+          }
+
+          <label class="btn btn-outline-primary w-100">
+            <i class="bi bi-upload me-2"></i>
+            Choose Image
+            <input 
+              type="file" 
+              class="d-none" 
+              accept="image/*"
+              (change)="onImageSelect($event)">
+          </label>
+          <small class="text-muted d-block mt-2">JPG, PNG or GIF (Max 5MB)</small>
+        </div>
+      </div>
+
+      <!-- Help Card -->
+      <div class="card border-0 shadow-sm bg-info bg-opacity-10">
+        <div class="card-body">
+          <h6 class="fw-bold text-info mb-3">
+            <i class="bi bi-lightbulb me-2"></i>
+            Tips
+          </h6>
+          <ul class="small text-muted mb-0 ps-3">
+            <li class="mb-2">Choose a clear, descriptive product name</li>
+            <li class="mb-2">Write detailed descriptions to help customers</li>
+            <li class="mb-2">Set competitive pricing</li>
+            <li class="mb-2">Keep inventory updated regularly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+.admin-layout { min-height: 100vh; display: flex; flex-direction: column; background: #f9fafb; }
+    .layout-container { display: flex; flex: 1; padding-top: 64px; }
+    .main-content { flex: 1; margin-left: 260px; min-height: calc(100vh - 64px); }
+    .content-wrapper { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+    @media (max-width: 768px) { .main-content { margin-left: 0; } .content-wrapper { padding: 1rem; } }

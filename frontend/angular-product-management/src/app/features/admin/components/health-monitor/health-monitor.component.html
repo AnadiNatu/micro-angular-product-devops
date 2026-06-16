@@ -1,0 +1,268 @@
+<!-- Health Monitor Component -->
+<div class="health-monitor-container">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1 fw-bold">
+        <i class="bi bi-heart-pulse me-2 text-danger"></i>
+        System Health Monitor
+      </h2>
+      <p class="text-muted mb-0">Real-time system and service monitoring</p>
+    </div>
+    
+    <div class="d-flex gap-2">
+      <button 
+        class="btn"
+        [class.btn-success]="isAutoRefresh"
+        [class.btn-outline-secondary]="!isAutoRefresh"
+        (click)="toggleAutoRefresh()">
+        <i [class]="isAutoRefresh ? 'bi bi-pause-circle' : 'bi bi-play-circle'" class="me-2"></i>
+        {{ isAutoRefresh ? 'Auto-Refresh On' : 'Auto-Refresh Off' }}
+      </button>
+      
+      <button class="btn btn-primary" (click)="manualRefresh()">
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Refresh Now
+      </button>
+
+      <button class="btn btn-outline-secondary" (click)="goBack()">
+        <i class="bi bi-arrow-left me-2"></i>
+        Back
+      </button>
+    </div>
+  </div>
+
+  <!-- Last Refresh Info -->
+  <div class="alert alert-info mb-4">
+    <i class="bi bi-clock me-2"></i>
+    <strong>Last Updated:</strong> {{ lastRefreshTime | date:'medium' }}
+    @if (isAutoRefresh) {
+      <span class="ms-3">
+        <i class="bi bi-arrow-repeat me-1"></i>
+        Auto-refreshing every 5 seconds
+      </span>
+    }
+  </div>
+
+  <!-- Overall System Health -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">
+        <i class="bi bi-activity me-2 text-danger"></i>
+        Overall System Health
+      </h5>
+      
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="progress" style="height: 30px;">
+            <div 
+              class="progress-bar bg-success"
+              [style.width.%]="getOverallHealth().percentage"
+              role="progressbar">
+              <strong>{{ getOverallHealth().percentage | number:'1.1-1' }}%</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <h4 class="mb-0 fw-bold text-success">{{ getOverallHealth().status }}</h4>
+          <small class="text-muted">System Status</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Metrics -->
+  <div class="row g-4 mb-4">
+    <!-- CPU Usage -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h6 class="text-muted mb-1">CPU Usage</h6>
+              <h3 class="fw-bold mb-0" [class]="getMetricColorClass(systemMetrics.cpuUsage, {warning: 70, danger: 85})">
+                {{ systemMetrics.cpuUsage }}%
+              </h3>
+            </div>
+            <div class="metric-icon bg-primary bg-opacity-10 rounded-circle">
+              <i class="bi bi-cpu fs-4 text-primary"></i>
+            </div>
+          </div>
+          <div class="progress" style="height: 8px;">
+            <div 
+              class="progress-bar"
+              [class]="getProgressBarClass(systemMetrics.cpuUsage, {warning: 70, danger: 85})"
+              [style.width.%]="systemMetrics.cpuUsage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory Usage -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h6 class="text-muted mb-1">Memory Usage</h6>
+              <h3 class="fw-bold mb-0" [class]="getMetricColorClass(systemMetrics.memoryUsage, {warning: 80, danger: 90})">
+                {{ systemMetrics.memoryUsage }}%
+              </h3>
+            </div>
+            <div class="metric-icon bg-success bg-opacity-10 rounded-circle">
+              <i class="bi bi-memory fs-4 text-success"></i>
+            </div>
+          </div>
+          <div class="progress" style="height: 8px;">
+            <div 
+              class="progress-bar"
+              [class]="getProgressBarClass(systemMetrics.memoryUsage, {warning: 80, danger: 90})"
+              [style.width.%]="systemMetrics.memoryUsage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disk Usage -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h6 class="text-muted mb-1">Disk Usage</h6>
+              <h3 class="fw-bold mb-0" [class]="getMetricColorClass(systemMetrics.diskUsage, {warning: 75, danger: 90})">
+                {{ systemMetrics.diskUsage }}%
+              </h3>
+            </div>
+            <div class="metric-icon bg-warning bg-opacity-10 rounded-circle">
+              <i class="bi bi-hdd fs-4 text-warning"></i>
+            </div>
+          </div>
+          <div class="progress" style="height: 8px;">
+            <div 
+              class="progress-bar"
+              [class]="getProgressBarClass(systemMetrics.diskUsage, {warning: 75, danger: 90})"
+              [style.width.%]="systemMetrics.diskUsage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Connections -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="metric-icon bg-info bg-opacity-10 rounded-circle mx-auto mb-3">
+            <i class="bi bi-wifi fs-3 text-info"></i>
+          </div>
+          <h3 class="fw-bold mb-1">{{ systemMetrics.activeConnections }}</h3>
+          <p class="text-muted small mb-0">Active Connections</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requests Per Minute -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="metric-icon bg-purple bg-opacity-10 rounded-circle mx-auto mb-3">
+            <i class="bi bi-arrow-repeat fs-3 text-purple"></i>
+          </div>
+          <h3 class="fw-bold mb-1">{{ systemMetrics.requestsPerMinute }}</h3>
+          <p class="text-muted small mb-0">Requests/Min</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Rate -->
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="metric-icon bg-danger bg-opacity-10 rounded-circle mx-auto mb-3">
+            <i class="bi bi-exclamation-triangle fs-3 text-danger"></i>
+          </div>
+          <h3 class="fw-bold mb-1">{{ systemMetrics.errorRate | number:'1.2-2' }}%</h3>
+          <p class="text-muted small mb-0">Error Rate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Status Table -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-3">
+      <h5 class="mb-0 fw-bold">
+        <i class="bi bi-server me-2 text-danger"></i>
+        Service Status
+      </h5>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 5%;"></th>
+              <th style="width: 25%;">Service Name</th>
+              <th style="width: 15%;">Status</th>
+              <th style="width: 15%;">Response Time</th>
+              <th style="width: 15%;">Uptime</th>
+              <th style="width: 25%;">Last Check</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (service of services; track service.name) {
+              <tr>
+                <!-- Status Icon -->
+                <td>
+                  <i 
+                    [class]="'bi ' + getStatusIcon(service.status) + ' fs-5'"
+                    [class.text-success]="service.status === 'healthy'"
+                    [class.text-warning]="service.status === 'degraded'"
+                    [class.text-danger]="service.status === 'down'"></i>
+                </td>
+
+                <!-- Service Name -->
+                <td class="fw-semibold">{{ service.name }}</td>
+
+                <!-- Status Badge -->
+                <td>
+                  <span 
+                    class="badge"
+                    [class]="getStatusBadgeClass(service.status)">
+                    {{ service.status | uppercase }}
+                  </span>
+                </td>
+
+                <!-- Response Time -->
+                <td>
+                  <span 
+                    [class]="service.responseTime > 300 ? 'text-danger' : service.responseTime > 150 ? 'text-warning' : 'text-success'">
+                    {{ service.responseTime }}ms
+                  </span>
+                </td>
+
+                <!-- Uptime -->
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="progress flex-grow-1" style="height: 6px;">
+                      <div 
+                        class="progress-bar bg-success"
+                        [style.width.%]="service.uptime"></div>
+                    </div>
+                    <small class="fw-semibold">{{ service.uptime }}%</small>
+                  </div>
+                </td>
+
+                <!-- Last Check -->
+                <td class="text-muted small">
+                  {{ service.lastCheck | date:'short' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

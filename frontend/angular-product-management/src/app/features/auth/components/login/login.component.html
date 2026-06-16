@@ -1,0 +1,189 @@
+<!-- Enhanced Login Component -->
+<div class="login-page min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <!-- Login Card -->
+        <div class="card login-card border-0 shadow-lg">
+          <!-- Card Header -->
+          <div class="card-header bg-gradient-primary text-white text-center py-4 border-0">
+            <div class="mb-3">
+              <div class="login-icon mx-auto bg-white text-primary rounded-circle d-flex align-items-center justify-content-center shadow">
+                <i class="bi bi-box-arrow-in-right fs-2"></i>
+              </div>
+            </div>
+            <h3 class="mb-1 fw-bold">Welcome Back</h3>
+            <p class="mb-0 opacity-75">Sign in to continue to OrderFlow Pro</p>
+          </div>
+
+          <!-- Card Body -->
+          <div class="card-body p-4">
+            <!-- Error Alert -->
+            @if (errorMessage) {
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ errorMessage }}
+                <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+              </div>
+            }
+
+            <!-- Demo Credentials Section -->
+            <div class="alert alert-info border-0 mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>Demo Credentials</strong>
+              </div>
+              <small class="d-block mb-3">Click to auto-fill and login:</small>
+              
+              <div class="row g-2">
+                <!-- Admin Demo Button -->
+                <div class="col-6">
+                  <button 
+                    type="button"
+                    class="btn btn-outline-danger w-100 btn-sm"
+                    (click)="quickLogin('admin')">
+                    <i [class]="'bi ' + demoCredentials.admin.icon + ' me-1'"></i>
+                    {{ demoCredentials.admin.label }}
+                  </button>
+                </div>
+
+                <!-- User Demo Button -->
+                <div class="col-6">
+                  <button 
+                    type="button"
+                    class="btn btn-outline-success w-100 btn-sm"
+                    (click)="quickLogin('user')">
+                    <i [class]="'bi ' + demoCredentials.user.icon + ' me-1'"></i>
+                    {{ demoCredentials.user.label }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider mb-4">
+              <span>OR LOGIN WITH EMAIL</span>
+            </div>
+
+            @if (loginForm) {
+            <!-- Login Form -->
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <!-- Email Field -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-envelope me-2 text-primary"></i>
+                  Email Address
+                </label>
+                <input 
+                  type="email" 
+                  class="form-control form-control-lg"
+                  [class.is-invalid]="hasError('email')"
+                  formControlName="email"
+                  placeholder="Enter your email">
+                
+                @if (hasError('email')) {
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage('email') }}
+                  </div>
+                }
+              </div>
+
+              <!-- Password Field -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-lock me-2 text-primary"></i>
+                  Password
+                </label>
+                <div class="input-group">
+                  <input 
+                    [type]="showPassword ? 'text' : 'password'"
+                    class="form-control form-control-lg"
+                    [class.is-invalid]="hasError('password')"
+                    formControlName="password"
+                    placeholder="Enter your password">
+                  
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button"
+                    (click)="togglePasswordVisibility()">
+                    <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                  </button>
+                  
+                  @if (hasError('password')) {
+                    <div class="invalid-feedback d-block">
+                      {{ getErrorMessage('password') }}
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Remember Me & Forgot Password -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="rememberMe"
+                    formControlName="rememberMe">
+                  <label class="form-check-label small" for="rememberMe">
+                    Remember me
+                  </label>
+                </div>
+                
+                <a 
+                  class="text-decoration-none small fw-semibold" 
+                  (click)="goToForgotPassword()"
+                  style="cursor: pointer;">
+                  Forgot password?
+                </a>
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg w-100 mb-3">
+                
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Signing in...
+                } @else {
+                  <i class="bi bi-box-arrow-in-right me-2"></i>
+                  Sign In
+                }
+              </button>
+
+              <!-- Signup Link -->
+              <div class="text-center">
+                <span class="text-muted">Don't have an account?</span>
+                <a 
+                  class="text-decoration-none fw-semibold ms-1" 
+                  (click)="goToSignup()"
+                  style="cursor: pointer;">
+                  Sign up now
+                </a>
+              </div>
+            </form>
+          }
+          </div>
+
+          <!-- Card Footer -->
+          <div class="card-footer bg-light border-0 text-center py-3">
+            <button 
+              class="btn btn-link text-muted text-decoration-none btn-sm"
+              (click)="goToHome()">
+              <i class="bi bi-arrow-left me-1"></i>
+              Back to Home
+            </button>
+          </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="text-center mt-4">
+          <p class="text-muted small mb-0">
+            <i class="bi bi-shield-check me-1"></i>
+            Secure login powered by Angular 17
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

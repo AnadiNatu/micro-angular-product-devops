@@ -1,0 +1,191 @@
+<!-- Update Product Component -->
+<div class="update-product-container">
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-muted mt-3">Loading product data...</p>
+    </div>
+  }
+
+  <!-- Update Form -->
+  @if (!isLoading && productForm) {
+    <!-- Page Header -->
+    <div class="mb-4">
+      <h2 class="mb-1 fw-bold">
+        <i class="bi bi-pencil-square me-2 text-warning"></i>
+        Update Product
+      </h2>
+      <p class="text-muted mb-0">Edit product information</p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-gradient-warning text-dark py-3">
+            <h5 class="mb-0">
+              <i class="bi bi-info-circle me-2"></i>
+              Product: {{ productData.productName }}
+            </h5>
+          </div>
+
+          <div class="card-body p-4">
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+              <!-- Product ID (Read-only) -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold text-muted">
+                  <i class="bi bi-hash me-2"></i>
+                  Product ID
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control"
+                  formControlName="productId"
+                  readonly>
+              </div>
+
+              <!-- Product Name (Read-only) -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold text-muted">
+                  <i class="bi bi-tag me-2"></i>
+                  Product Name
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control"
+                  formControlName="productName"
+                  readonly>
+                <small class="text-muted">Product name cannot be changed</small>
+              </div>
+
+              <!-- Description -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-text-paragraph me-2 text-warning"></i>
+                  Description
+                  <span class="text-danger">*</span>
+                </label>
+                <textarea 
+                  class="form-control"
+                  [class.is-invalid]="hasError('productDesc')"
+                  formControlName="productDesc"
+                  rows="4"></textarea>
+                
+                @if (hasError('productDesc')) {
+                  <div class="invalid-feedback">
+                    {{ getErrorMessage('productDesc') }}
+                  </div>
+                }
+              </div>
+
+              <!-- Price & Inventory -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-currency-dollar me-2 text-warning"></i>
+                    Price (USD)
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    class="form-control form-control-lg"
+                    [class.is-invalid]="hasError('price')"
+                    formControlName="price"
+                    step="0.01"
+                    min="0">
+                  
+                  @if (hasError('price')) {
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('price') }}
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-box-seam me-2 text-warning"></i>
+                    Inventory
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    class="form-control form-control-lg"
+                    [class.is-invalid]="hasError('productInventory')"
+                    formControlName="productInventory"
+                    min="0">
+                  
+                  @if (hasError('productInventory')) {
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('productInventory') }}
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Form Actions -->
+              <div class="d-flex justify-content-between mt-4">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary btn-lg"
+                  (click)="cancel()"
+                  [disabled]="isSubmitting">
+                  <i class="bi bi-x-circle me-2"></i>
+                  Cancel
+                </button>
+
+                <button 
+                  type="submit" 
+                  class="btn btn-warning btn-lg text-dark"
+                  [disabled]="isSubmitting || productForm.invalid">
+                  @if (isSubmitting) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    Updating...
+                  } @else {
+                    <i class="bi bi-check-circle me-2"></i>
+                    Update Product
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar - Current Info -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0 py-3">
+            <h6 class="mb-0 fw-bold">
+              <i class="bi bi-info-circle me-2 text-warning"></i>
+              Current Information
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <small class="text-muted d-block mb-1">Current Price</small>
+              <div class="fw-bold text-primary fs-5">
+                {{ productData.price | customCurrency }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <small class="text-muted d-block mb-1">Current Inventory</small>
+              <div class="fw-bold">
+                {{ productData.productInventory }} units
+              </div>
+            </div>
+
+            @if (productData.category) {
+              <div class="mb-3">
+                <small class="text-muted d-block mb-1">Category</small>
+                <span class="badge bg-info">{{ productData.category }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

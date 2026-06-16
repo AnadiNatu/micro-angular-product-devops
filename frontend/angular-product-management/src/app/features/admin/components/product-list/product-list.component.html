@@ -1,0 +1,207 @@
+<!-- Product List Component -->
+<div class="product-list-container">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1 fw-bold">
+        <i class="bi bi-box-seam me-2 text-primary"></i>
+        Product Management
+      </h2>
+      <p class="text-muted mb-0">Manage your product inventory</p>
+    </div>
+    
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" (click)="goBack()">
+        <i class="bi bi-arrow-left me-2"></i>
+        Back to Dashboard
+      </button>
+      <button class="btn btn-primary" (click)="createNewProduct()">
+        <i class="bi bi-plus-circle me-2"></i>
+        Add New Product
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters & Search -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Search -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-search me-2"></i>
+            Search Products
+          </label>
+          <input 
+            type="text" 
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            (input)="searchProducts()"
+            placeholder="Search by name or description...">
+        </div>
+
+        <!-- Category Filter -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-funnel me-2"></i>
+            Category
+          </label>
+          <select 
+            class="form-select"
+            [(ngModel)]="selectedCategory"
+            (change)="filterByCategory()">
+            @for (category of categories; track category) {
+              <option [value]="category">{{ category | titlecase }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Clear Filters -->
+        <div class="col-md-2 d-flex align-items-end">
+          <button 
+            class="btn btn-outline-secondary w-100"
+            (click)="clearFilters()">
+            <i class="bi bi-x-circle me-2"></i>
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="mt-3">
+        <small class="text-muted">
+          Showing {{ filteredProducts.length }} of {{ products.length }} products
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Table -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-3">
+      <h5 class="mb-0 fw-bold">
+        <i class="bi bi-table me-2 text-primary"></i>
+        Product List
+      </h5>
+    </div>
+
+    <div class="card-body p-0">
+      <!-- Loading State -->
+      @if (isLoading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="text-muted mt-3">Loading products...</p>
+        </div>
+      }
+
+      <!-- Products Table -->
+      @if (!isLoading && filteredProducts.length > 0) {
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 10%;">Image</th>
+                <th style="width: 20%;">Product Name</th>
+                <th style="width: 25%;">Description</th>
+                <th style="width: 10%;">Price</th>
+                <th style="width: 10%;">Inventory</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 10%;" class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of filteredProducts; track product.productId) {
+                <tr>
+                  <!-- ID -->
+                  <td class="fw-semibold text-muted">#{{ product.productId }}</td>
+
+                  <!-- Image -->
+                  <td>
+                    @if (product.image) {
+                      <img 
+                        [src]="product.image" 
+                        [alt]="product.productName"
+                        class="rounded border"
+                        style="width: 50px; height: 50px; object-fit: cover;">
+                    } @else {
+                      <div class="bg-light rounded d-flex align-items-center justify-content-center border" style="width: 50px; height: 50px;">
+                        <i class="bi bi-box-seam text-muted"></i>
+                      </div>
+                    }
+                  </td>
+
+                  <!-- Product Name -->
+                  <td>
+                    <div class="fw-semibold">{{ product.productName }}</div>
+                    @if (product.category) {
+                      <small class="text-muted">{{ product.category }}</small>
+                    }
+                  </td>
+
+                  <!-- Description -->
+                  <td>
+                    <small class="text-muted">{{ product.productDesc | slice:0:60 }}...</small>
+                  </td>
+
+                  <!-- Price -->
+                  <td class="fw-bold text-primary">
+                    {{ product.price | customCurrency }}
+                  </td>
+
+                  <!-- Inventory -->
+                  <td>
+                    <div class="fw-semibold">{{ product.productInventory }}</div>
+                    <small class="text-muted">units</small>
+                  </td>
+
+                  <!-- Status -->
+                  <td>
+                    <span 
+                      class="badge"
+                      [class]="getStockBadge(product.productInventory).class">
+                      {{ getStockBadge(product.productInventory).label }}
+                    </span>
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="text-center">
+                    <div class="btn-group btn-group-sm">
+                      <button 
+                        class="btn btn-outline-warning"
+                        (click)="updateProduct(product.productName)"
+                        title="Edit Product">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button 
+                        class="btn btn-outline-danger"
+                        (click)="deleteProduct(product)"
+                        title="Delete Product">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (!isLoading && filteredProducts.length === 0) {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox fs-1 text-muted"></i>
+          <p class="text-muted mt-3 mb-0">No products found</p>
+          @if (searchTerm || selectedCategory !== 'all') {
+            <button class="btn btn-sm btn-outline-primary mt-3" (click)="clearFilters()">
+              Clear Filters
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

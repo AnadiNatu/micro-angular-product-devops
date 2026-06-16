@@ -1,0 +1,258 @@
+<!-- Admin Dashboard -->
+<div class="admin-dashboard">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1 fw-bold">
+        <i class="bi bi-speedometer2 me-2 text-primary"></i>
+        Dashboard
+      </h2>
+      <p class="text-muted mb-0">Welcome to your admin dashboard</p>
+    </div>
+    
+    <div class="btn-group">
+      <button class="btn btn-outline-primary" (click)="loadDashboardData()">
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="row g-4 mb-4">
+    <!-- Total Products -->
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card card border-0 shadow-sm h-100" [appHighlight]="'#eff6ff'">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted small mb-1">Total Products</p>
+              <h3 class="fw-bold mb-0">{{ stats.totalProducts }}</h3>
+            </div>
+            <div class="stat-icon bg-primary bg-opacity-10 rounded-circle">
+              <i class="bi bi-box-seam fs-4 text-primary"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="badge bg-primary-subtle text-primary">
+              <i class="bi bi-arrow-up me-1"></i> Active
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Orders -->
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card card border-0 shadow-sm h-100" [appHighlight]="'#f0fdf4'">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted small mb-1">Total Orders</p>
+              <h3 class="fw-bold mb-0">{{ stats.totalOrders }}</h3>
+            </div>
+            <div class="stat-icon bg-success bg-opacity-10 rounded-circle">
+              <i class="bi bi-cart-check fs-4 text-success"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="badge bg-success-subtle text-success">
+              {{ stats.pendingOrders }} Pending
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Users -->
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card card border-0 shadow-sm h-100" [appHighlight]="'#fef3c7'">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted small mb-1">Total Users</p>
+              <h3 class="fw-bold mb-0">{{ stats.totalUsers }}</h3>
+            </div>
+            <div class="stat-icon bg-warning bg-opacity-10 rounded-circle">
+              <i class="bi bi-people fs-4 text-warning"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="badge bg-warning-subtle text-warning">
+              <i class="bi bi-person-check me-1"></i> Verified
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Revenue -->
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card card border-0 shadow-sm h-100" [appHighlight]="'#fce7f3'">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-muted small mb-1">Total Revenue</p>
+              <h3 class="fw-bold mb-0">{{ stats.totalRevenue | customCurrency }}</h3>
+            </div>
+            <div class="stat-icon bg-danger bg-opacity-10 rounded-circle">
+              <i class="bi bi-graph-up fs-4 text-danger"></i>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="badge bg-danger-subtle text-danger">
+              <i class="bi bi-arrow-up me-1"></i> +12.5%
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Section -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-0 py-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">
+          <i class="bi bi-box-seam me-2 text-primary"></i>
+          Product Inventory
+        </h5>
+        
+        <!-- Filter Buttons -->
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-success" (click)="filterByAsc()">
+            <i class="bi bi-sort-numeric-down me-1"></i>
+            Price: Low to High
+          </button>
+          <button class="btn btn-outline-danger" (click)="filterByDesc()">
+            <i class="bi bi-sort-numeric-up me-1"></i>
+            Price: High to Low
+          </button>
+          <button class="btn btn-outline-warning" (click)="filterTopOrdered()">
+            <i class="bi bi-star me-1"></i>
+            Top Ordered
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <!-- Loading State -->
+      @if (isLoading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="text-muted mt-3">Loading products...</p>
+        </div>
+      }
+
+      <!-- Products Grid -->
+      @if (!isLoading && products.length > 0) {
+        <div class="row g-3">
+          @for (product of products; track product.productId) {
+            <div class="col-lg-4 col-md-6">
+              <div class="card product-card border-0 shadow-sm h-100" [appHighlight]="'#f8fafc'">
+                <div class="card-body">
+                  <div class="d-flex gap-3">
+                    <!-- Product Image -->
+                    @if (product.image) {
+                      <img 
+                        [src]="product.image" 
+                        [alt]="product.productName"
+                        class="product-img rounded"
+                        style="width: 80px; height: 80px; object-fit: cover;">
+                    } @else {
+                      <div class="product-img-placeholder rounded bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="bi bi-box-seam fs-2 text-muted"></i>
+                      </div>
+                    }
+
+                    <!-- Product Info -->
+                    <div class="flex-grow-1">
+                      <h6 class="mb-1 fw-bold">{{ product.productName }}</h6>
+                      <p class="text-muted small mb-2">{{ product.productDesc | slice:0:50 }}...</p>
+                      
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <div class="fw-bold text-primary">{{ product.price | customCurrency }}</div>
+                          <small [class]="getStockLevel(product.productInventory).class">
+                            {{ getStockLevel(product.productInventory).label }}
+                            ({{ product.productInventory }})
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (!isLoading && products.length === 0) {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox fs-1 text-muted"></i>
+          <p class="text-muted mt-3">No products found</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Recent Orders -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">
+          <i class="bi bi-clock-history me-2 text-primary"></i>
+          Recent Orders
+        </h5>
+        <a routerLink="/admin/orders" class="btn btn-sm btn-outline-primary">
+          View All <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      @if (recentOrders.length > 0) {
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Customer</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of recentOrders; track order.orderId) {
+                <tr style="cursor: pointer;" (click)="viewOrder(order.orderId)">
+                  <td class="fw-semibold">#{{ order.orderId }}</td>
+                  <td>{{ order.productName }}</td>
+                  <td>{{ order.userName }}</td>
+                  <td>{{ order.orderQuantity }}</td>
+                  <td>
+                    <span class="badge" [class]="getStatusClass(order.orderStatus)">
+                      {{ order.orderStatus }}
+                    </span>
+                  </td>
+                  <td>{{ order.orderDate | date:'mediumDate' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="text-center py-5">
+          <i class="bi bi-cart-x fs-1 text-muted"></i>
+          <p class="text-muted mt-3">No recent orders</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

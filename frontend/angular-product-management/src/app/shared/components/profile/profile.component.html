@@ -1,0 +1,145 @@
+<div class="profile-container">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-gradient-primary text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0">
+                <i class="bi bi-person-circle me-2"></i>My Profile
+              </h4>
+              <div class="d-flex gap-2">
+                @if (!isEditMode) {
+                  <button class="btn btn-light btn-sm" (click)="toggleEditMode()">
+                    <i class="bi bi-pencil me-1"></i> Edit Profile
+                  </button>
+                } @else {
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-success" (click)="saveProfile()" [disabled]="profileForm.invalid">
+                      <i class="bi bi-check-lg me-1"></i> Save
+                    </button>
+                    <button class="btn btn-outline-light" (click)="toggleEditMode()">
+                      <i class="bi bi-x-lg me-1"></i> Cancel
+                    </button>
+                  </div>
+                }
+                <!-- Logout button always visible in profile header -->
+                <button class="btn btn-danger btn-sm" type="button" (click)="logout()">
+                  <i class="bi bi-box-arrow-right me-1"></i> Logout
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <div class="position-relative d-inline-block">
+                <img
+                  [src]="getAvatar()"
+                  [alt]="currentUser?.fname"
+                  class="rounded-circle border border-4 border-primary shadow"
+                  width="120" height="120"
+                  style="object-fit: cover;">
+                @if (isEditMode) {
+                  <label class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2" style="cursor: pointer;">
+                    <i class="bi bi-camera-fill"></i>
+                    <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)">
+                  </label>
+                }
+              </div>
+              <div class="mt-3">
+                <h5 class="mb-1">{{ currentUser?.fname }} {{ currentUser?.lname }}</h5>
+                <p class="text-muted mb-0">
+                  <i class="bi bi-shield-check me-1"></i>
+                  {{ currentUser?.role | titlecase }} Account
+                </p>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <form [formGroup]="profileForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-person me-2 text-primary"></i>First Name
+                  </label>
+                  <input type="text" class="form-control"
+                    [class.is-invalid]="hasError('fname')"
+                    formControlName="fname" placeholder="Enter first name">
+                  @if (hasError('fname')) {
+                    <div class="invalid-feedback">{{ getErrorMessage('fname') }}</div>
+                  }
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-person me-2 text-primary"></i>Last Name
+                  </label>
+                  <input type="text" class="form-control"
+                    [class.is-invalid]="hasError('lname')"
+                    formControlName="lname" placeholder="Enter last name">
+                  @if (hasError('lname')) {
+                    <div class="invalid-feedback">{{ getErrorMessage('lname') }}</div>
+                  }
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-envelope me-2 text-primary"></i>Email Address
+                  </label>
+                  <input type="email" class="form-control" formControlName="email" readonly>
+                  <small class="text-muted">Email cannot be changed</small>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-telephone me-2 text-primary"></i>Phone Number
+                  </label>
+                  <input type="tel" class="form-control"
+                    [class.is-invalid]="hasError('phoneNumber')"
+                    formControlName="phoneNumber" placeholder="+1 (555) 123-4567">
+                  @if (hasError('phoneNumber')) {
+                    <div class="invalid-feedback">{{ getErrorMessage('phoneNumber') }}</div>
+                  }
+                </div>
+              </div>
+            </form>
+
+            <hr class="my-4">
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                  <div class="text-muted small mb-1">Account ID</div>
+                  <div class="fw-semibold">#{{ currentUser?.id }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                  <div class="text-muted small mb-1">Account Type</div>
+                  <div class="fw-semibold">
+                    <span class="badge"
+                      [class.bg-danger]="currentUser?.role === 'ADMIN'"
+                      [class.bg-success]="currentUser?.role === 'USER'">
+                      {{ currentUser?.role }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prominent logout section at bottom of profile -->
+            <hr class="my-4">
+            <div class="d-grid">
+              <button class="btn btn-outline-danger" type="button" (click)="logout()">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                Sign Out of Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

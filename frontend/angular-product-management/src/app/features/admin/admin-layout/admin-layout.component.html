@@ -1,0 +1,18 @@
+<!-- Admin Layout - Header + Sidebar + Content -->
+<div class="admin-layout">
+  <!-- Header Component (from shared module) -->
+  <app-header></app-header>
+
+  <div class="layout-container">
+    <!-- Sidebar Component (from shared module) -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-wrapper">
+        <!-- Router Outlet - Child routes render here -->
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

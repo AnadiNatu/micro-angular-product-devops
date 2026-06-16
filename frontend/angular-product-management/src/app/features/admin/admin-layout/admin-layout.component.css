@@ -1,0 +1,44 @@
+/* Admin Layout Styles */
+
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f9fafb;
+}
+
+.layout-container {
+  display: flex;
+  flex: 1;
+  padding-top: 64px; /* Height of fixed header */
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px; /* Width of sidebar */
+  min-height: calc(100vh - 64px);
+  transition: margin-left 0.3s ease;
+}
+
+.content-wrapper {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+}

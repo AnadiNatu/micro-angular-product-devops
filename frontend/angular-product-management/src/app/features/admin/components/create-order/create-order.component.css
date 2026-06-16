@@ -1,0 +1,66 @@
+/* Create Order Component Styles */
+
+.create-order-container {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient Header */
+.bg-gradient-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Form Controls */
+.form-control-lg,
+.form-select-lg {
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control-lg:focus,
+.form-select-lg:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+}
+
+/* Buttons */
+.btn-lg {
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+/* Cards */
+.card {
+  border-radius: 16px;
+}
+
+/* Alert */
+.alert-info {
+  border-left: 4px solid #06b6d4;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .create-order-container .col-lg-4 {
+    margin-top: 2rem;
+  }
+}

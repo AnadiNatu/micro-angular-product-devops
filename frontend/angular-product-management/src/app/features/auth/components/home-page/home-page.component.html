@@ -1,0 +1,128 @@
+<!-- Home Page / Landing Page -->
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero-section min-vh-100 d-flex align-items-center">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Left Column - Content -->
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="hero-content">
+            <h1 class="display-3 fw-bold mb-4 animate-fade-in">
+              Welcome to <span class="text-gradient">OrderFlow Pro</span>
+            </h1>
+            <p class="lead mb-4 text-muted animate-fade-in-delay-1">
+              Your all-in-one solution for product and order management. 
+              Streamline your operations, boost productivity, and grow your business.
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="d-flex gap-3 mb-4 animate-fade-in-delay-2">
+              <button class="btn btn-primary btn-lg px-4" (click)="goToLogin()">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Get Started
+              </button>
+              <button class="btn btn-outline-primary btn-lg px-4" (click)="goToSignup()">
+                <i class="bi bi-person-plus me-2"></i>
+                Sign Up Free
+              </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="row g-4 mt-4 animate-fade-in-delay-3">
+              <div class="col-4">
+                <div class="stat-item">
+                  <h3 class="fw-bold text-primary mb-0">1000+</h3>
+                  <p class="text-muted small mb-0">Products</p>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="stat-item">
+                  <h3 class="fw-bold text-success mb-0">5000+</h3>
+                  <p class="text-muted small mb-0">Orders</p>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="stat-item">
+                  <h3 class="fw-bold text-info mb-0">500+</h3>
+                  <p class="text-muted small mb-0">Users</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column - Illustration -->
+        <div class="col-lg-6">
+          <div class="hero-image animate-float">
+            <div class="illustration-card">
+              <i class="bi bi-graph-up-arrow display-1 text-primary"></i>
+              <div class="floating-element element-1">
+                <i class="bi bi-box-seam fs-3 text-success"></i>
+              </div>
+              <div class="floating-element element-2">
+                <i class="bi bi-cart-check fs-3 text-info"></i>
+              </div>
+              <div class="floating-element element-3">
+                <i class="bi bi-people fs-3 text-warning"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section py-5 bg-light">
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold mb-3">Powerful Features</h2>
+        <p class="lead text-muted">Everything you need to manage your business efficiently</p>
+      </div>
+
+      <div class="row g-4">
+        @for (feature of features; track feature.title) {
+          <div class="col-md-6 col-lg-3">
+            <div class="feature-card card border-0 shadow-sm h-100" [appHighlight]="'#f0f7ff'">
+              <div class="card-body text-center p-4">
+                <div class="feature-icon bg-primary bg-opacity-10 rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                  <i [class]="'bi ' + feature.icon + ' fs-2 text-primary'"></i>
+                </div>
+                <h5 class="fw-bold mb-3">{{ feature.title }}</h5>
+                <p class="text-muted small mb-0">{{ feature.description }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section py-5 bg-gradient-primary text-white">
+    <div class="container py-5 text-center">
+      <h2 class="display-5 fw-bold mb-3">Ready to Get Started?</h2>
+      <p class="lead mb-4 opacity-75">Join thousands of businesses using OrderFlow Pro</p>
+      <div class="d-flex gap-3 justify-content-center">
+        <button class="btn btn-light btn-lg px-4" (click)="goToSignup()">
+          <i class="bi bi-rocket-takeoff me-2"></i>
+          Start Free Trial
+        </button>
+        <button class="btn btn-outline-light btn-lg px-4" (click)="goToLogin()">
+          <i class="bi bi-box-arrow-in-right me-2"></i>
+          Sign In
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container text-center">
+      <p class="mb-0">
+        <i class="bi bi-box-seam me-2"></i>
+        OrderFlow Pro © 2024 | Built with Angular 17
+      </p>
+    </div>
+  </footer>
+</div>

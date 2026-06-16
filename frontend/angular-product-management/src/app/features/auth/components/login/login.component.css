@@ -1,0 +1,219 @@
+/* Enhanced Login Component Styles */
+
+/* Page Background */
+.login-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 30s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Login Card */
+.login-card {
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.login-card.shake {
+  animation: shake 0.5s;
+}
+
+/* Gradient Header */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* Login Icon */
+.login-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto;
+}
+
+/* Form Controls */
+.form-control-lg {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.form-control-lg:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+.form-control-lg.is-invalid {
+  border-color: #dc3545;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+  padding: 0 1rem;
+  font-weight: 500;
+}
+
+/* Buttons */
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-outline-danger,
+.btn-outline-success {
+  border-width: 2px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline-success:hover {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Input Group */
+.input-group .btn-outline-secondary {
+  border-left: none;
+  border-color: #e5e7eb;
+}
+
+.input-group .form-control:focus + .btn-outline-secondary {
+  border-color: #3b82f6;
+}
+
+/* Links */
+a {
+  color: #3b82f6;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #2563eb;
+}
+
+/* Form Labels */
+.form-label {
+  color: #374151;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Alert */
+.alert-info {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .login-card {
+    margin: 1rem;
+  }
+
+  .login-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .card-header h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Password Toggle Button */
+.input-group .btn-outline-secondary:hover {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #374151;
+}
+
+/* Checkbox */
+.form-check-input:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+/* Loading Spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
