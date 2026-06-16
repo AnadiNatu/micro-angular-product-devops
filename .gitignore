@@ -1,27 +1,42 @@
-# Backend build output
+# ============================================================
+# .gitignore additions for microservice-demo project root
+# Add these lines to your existing .gitignore
+# ============================================================
+
+# ─── Secret environment files — NEVER COMMIT ─────────────────
+.env
+.env.prod
+.env.local
+*.env.local
+!.env.example
+
+# ─── Spring Boot build artifacts ─────────────────────────────
+*/target/
 **/target/
-**/*.log
-**/logs/
+!**/target/
 
-# Spring Boot configs/secrets
-**/src/main/resources/application.properties
-**/src/main/resources/application.yml
-**/src/main/resources/application-*.properties
-**/src/main/resources/application-*.yml
+# ─── Upload folders ───────────────────────────────────────────
+uploads/
+user-profile-photos/
+**/uploads/
 
-# Angular
-**/node_modules/
-**/.angular/
-**/dist/
+# ─── Docker ────────────────────────────────────────────────────
+.docker/
 
-# IDE
+# ─── Node / Angular ────────────────────────────────────────────
+node_modules/
+dist/
+.angular/cache
+npm-debug.log*
+
+# ─── IDE ───────────────────────────────────────────────────────
 .idea/
+*.iml
 .vscode/
-
-# OS
+*.suo
 .DS_Store
 Thumbs.db
 
-# Environment files
-.env
-.env.*
+# ─── Logs ──────────────────────────────────────────────────────
+logs/
+*.log
