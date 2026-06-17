@@ -37,7 +37,7 @@ EXPOSE 8080
 
 # Health check — waits for the actuator endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+  CMD wget -qO- http://localhost:8083/actuator/health || exit 1
 
 # JVM tuning for containers
 ENTRYPOINT ["java", \

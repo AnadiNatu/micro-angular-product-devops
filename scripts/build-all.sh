@@ -35,12 +35,11 @@ build_service() {
   echo ">>> $SERVICE_NAME built successfully."
 }
 
-# Build in dependency order
-build_service "service-registry"  "service-registry"
-build_service "auth-service"       "auth-service"
-build_service "demo-service_1"     "demo-service-1"
-build_service "demo-service_2"     "demo-service-2"
-build_service "api-gateway"        "api-gateway"
+build_service "DemoMicroserviceProject/service-registry"  "service-registry"
+build_service "DemoMicroserviceProject/auth-service"      "auth-service"
+build_service "DemoMicroserviceProject/demo-service_1"    "demo-service-1"
+build_service "DemoMicroserviceProject/demo-service_2"    "demo-service-2"
+build_service "DemoMicroserviceProject/api-gateway"       "api-gateway"
 
 echo ""
 echo "============================================="
