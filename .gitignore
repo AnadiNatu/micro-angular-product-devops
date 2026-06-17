@@ -1,7 +1,76 @@
-# ============================================================
+# ================= BUILD =================
+target/
+build/
+out/
+*.class
+
+# ================= LOGS =================
+*.log
+logs/
+*.out
+*.err
+*.gz
+
+# ================= ENV =================
+# ================= DOCKER SECRETS =================
+.env
+.env.*
+!.env.example
+
+# ================= SPRING CONFIG (CRITICAL) =================
+**/application.properties
+**/application.yml
+**/application-*.properties
+**/application-*.yml
+
+# ================= SECURITY =================
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# ================= IDE =================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ================= STS =================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ================= NETBEANS =================
+/nbproject/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ================= OS =================
+.DS_Store
+Thumbs.db
+
+# ================= TEST =================
+coverage/
+reports/
+
+# ================= NODE =================
+node_modules/
+
+# ================= TEMP =================
+*.tmp
+*.swp
+*.bak
+
 # .gitignore additions for microservice-demo project root
 # Add these lines to your existing .gitignore
-# ============================================================
 
 # ─── Secret environment files — NEVER COMMIT ─────────────────
 .env
