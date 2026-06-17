@@ -18,10 +18,15 @@ logs/
 !.env.example
 
 # ================= SPRING CONFIG (CRITICAL) =================
+# Block the LOCAL properties file (has real secrets)
 **/application.properties
 **/application.yml
-**/application-*.properties
-**/application-*.yml
+**/application-local.properties
+**/application-local.yml
+
+# ✅ ALLOW docker and prod profiles — they only use ${ENV_VAR} placeholders
+!**/application-docker.properties
+!**/application-prod.properties
 
 # ================= SECURITY =================
 *.pem
