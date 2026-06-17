@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { delay, tap, catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 import { User, LoginCredentials, SignUpDTO, UserRole, ForgotPasswordRequest, ResetPasswordRequest } from '../models/user.model';
 import { StorageService } from './storage.service';
@@ -11,9 +12,8 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class AuthService {
- private readonly AUTH_URL = 'http://localhost:8083/api/auth';
-  private readonly PASSWORD_URL = 'http://localhost:8083/api/password';
-
+ private readonly AUTH_URL = `${environment.apiBaseUrl}/api/auth`;
+private readonly PASSWORD_URL = `${environment.apiBaseUrl}/api/password`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

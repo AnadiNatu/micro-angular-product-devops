@@ -33,7 +33,7 @@ RUN chown appuser:appgroup app.jar
 USER appuser
 
 # Expose the gateway port
-EXPOSE 8080
+EXPOSE 8083
 
 # Health check — waits for the actuator endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
