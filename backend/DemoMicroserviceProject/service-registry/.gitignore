@@ -71,3 +71,16 @@ node_modules/
 
 # ================= KEEP EXAMPLE =================
 # !.env.example
+
+# ================= SPRING CONFIG (CRITICAL) =================
+# Block local properties — has real secrets
+**/application.properties
+**/application.yml
+**/application-local.properties
+**/application-local.yml
+
+# ✅ ALLOW — only contain ${ENV_VAR} placeholders, safe to commit
+!**/application-docker.properties
+!**/application-prod.properties
+!**/application-docker.yml
+!**/application-prod.yml
