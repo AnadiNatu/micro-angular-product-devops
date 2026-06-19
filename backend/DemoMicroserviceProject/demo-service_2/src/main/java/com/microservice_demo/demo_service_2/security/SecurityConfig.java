@@ -2,6 +2,7 @@ package com.microservice_demo.demo_service_2.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -42,6 +43,7 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/en2/sync").permitAll()
                         .requestMatchers("/api/en2/sync/profile-picture").permitAll()
@@ -49,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/en2/test/public").permitAll()
                         .requestMatchers("/api/orders/product/*/count").permitAll()
                         .requestMatchers("/api/orders/user/*/exists").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         log.info("[DS2 Security] Security Filter Chain configured successfully");

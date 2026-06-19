@@ -2,6 +2,7 @@ package com.microservice_demo.demo_service_1.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -97,10 +98,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints - NO authentication required
+                        .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/users/sync").permitAll()
                         .requestMatchers("/api/users/sync/profile-picture").permitAll()
                         .requestMatchers("/api/en1/test/public").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
