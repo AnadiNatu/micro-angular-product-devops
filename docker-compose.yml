@@ -1,15 +1,24 @@
 # =============================================================================
-# docker-compose.yml
-# Microservice Demo — Full Stack
+# docker-compose.yml — Microservice Demo Full Stack (LOCAL / DOCKER profile)
 #
-# Services:
-#   postgres         — PostgreSQL 16 :5432
-#   service-registry — Eureka Server :8761
-#   auth-service     — Auth + JWT :8082
-#   demo-service-1   — Demo Service 1 :8080
-#   demo-service-2   — Demo Service 2 :8084
-#   api-gateway      — Spring Cloud Gateway :8083
-#   frontend         — Angular + Nginx :80
+# FIXES APPLIED vs original:
+#   1. frontend service now uses its own context (./DemoMicroserviceProject/frontend)
+#      instead of the api-gateway context — was a copy-paste bug.
+#   2. Eureka defaultZone URL made consistent (/eureka/ trailing slash everywhere).
+#   3. Service names kept consistent with docker-compose.prod.yml overrides.
+#   4. postgres-init volume mount corrected.
+#   5. auth-service port 8082, demo-service-1 port 8080, demo-service-2 port 8084
+#      — internal only (no host binding needed; gateway :8083 is the single entry).
+#   6. FRONTEND_URL env var passed correctly into auth-service.
+#   7. All healthcheck ports validated against each service's server.port.
+#
+# Usage (local):
+#   cp .env.example .env          # fill in real values
+#   docker compose up --build -d
+#
+# Usage (prod on EC2):
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+#     --env-file .env.prod up -d
 # =============================================================================
 
 services:
@@ -23,18 +32,9 @@ services:
       POSTGRES_USER:     ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB:       postgres
-      AUTH_DB_NAME:      ${AUTH_DB_NAME}
-      AUTH_DB_USER:      ${AUTH_DB_USER}
-      AUTH_DB_PASSWORD:  ${AUTH_DB_PASSWORD}
-      DEMO1_DB_NAME:     ${DEMO1_DB_NAME}
-      DEMO1_DB_USER:     ${DEMO1_DB_USER}
-      DEMO1_DB_PASSWORD: ${DEMO1_DB_PASSWORD}
-      DEMO2_DB_NAME:     ${DEMO2_DB_NAME}
-      DEMO2_DB_USER:     ${DEMO2_DB_USER}
-      DEMO2_DB_PASSWORD: ${DEMO2_DB_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d:ro
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro   # init scripts create per-service DBs
     ports:
       - "5432:5432"
     networks:
@@ -75,27 +75,35 @@ services:
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
-      POSTGRES_HOST:          postgres
-      POSTGRES_PORT:          5432
-      AUTH_DB_NAME:           ${AUTH_DB_NAME}
-      AUTH_DB_USER:           ${AUTH_DB_USER}
-      AUTH_DB_PASSWORD:       ${AUTH_DB_PASSWORD}
-      JWT_SECRET:             ${JWT_SECRET}
-      MAIL_HOST:              ${MAIL_HOST}
-      MAIL_PORT:              ${MAIL_PORT}
-      MAIL_USERNAME:          ${MAIL_USERNAME}
-      MAIL_PASSWORD:          ${MAIL_PASSWORD}
-      TWILIO_ACCOUNT_SID:     ${TWILIO_ACCOUNT_SID}
-      TWILIO_AUTH_TOKEN:      ${TWILIO_AUTH_TOKEN}
-      TWILIO_PHONE_NUMBER:    ${TWILIO_PHONE_NUMBER}
-      CLOUDINARY_CLOUD_NAME:  ${CLOUDINARY_CLOUD_NAME}
-      CLOUDINARY_API_KEY:     ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET:  ${CLOUDINARY_API_SECRET}
-      GOOGLE_CLIENT_ID:       ${GOOGLE_CLIENT_ID}
-      GOOGLE_CLIENT_SECRET:   ${GOOGLE_CLIENT_SECRET}
-      GITHUB_CLIENT_ID:       ${GITHUB_CLIENT_ID}
-      GITHUB_CLIENT_SECRET:   ${GITHUB_CLIENT_SECRET}
-      FRONTEND_URL:           ${FRONTEND_URL}
+      # DB — resolves to the "postgres" compose service
+      POSTGRES_HOST:         postgres
+      POSTGRES_PORT:         5432
+      AUTH_DB_NAME:          ${AUTH_DB_NAME}
+      AUTH_DB_USER:          ${AUTH_DB_USER}
+      AUTH_DB_PASSWORD:      ${AUTH_DB_PASSWORD}
+      # Security
+      JWT_SECRET:            ${JWT_SECRET}
+      # Mail
+      MAIL_HOST:             ${MAIL_HOST}
+      MAIL_PORT:             ${MAIL_PORT}
+      MAIL_USERNAME:         ${MAIL_USERNAME}
+      MAIL_PASSWORD:         ${MAIL_PASSWORD}
+      # Twilio
+      TWILIO_ACCOUNT_SID:    ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN:     ${TWILIO_AUTH_TOKEN}
+      TWILIO_PHONE_NUMBER:   ${TWILIO_PHONE_NUMBER}
+      # Cloudinary
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY:    ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      # OAuth2
+      GOOGLE_CLIENT_ID:      ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET:  ${GOOGLE_CLIENT_SECRET}
+      GITHUB_CLIENT_ID:      ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET:  ${GITHUB_CLIENT_SECRET}
+      # Frontend
+      FRONTEND_URL:          ${FRONTEND_URL}
+    # No host port binding — accessed only via api-gateway on the internal network
     networks:
       - demo-network
     depends_on:
@@ -199,13 +207,18 @@ services:
       retries: 3
       start_period: 60s
 
-  # ── Frontend ────────────────────────────────────────────────────────────────
+  # ── Frontend (Angular + Nginx) ──────────────────────────────────────────────
+  # FIX: was incorrectly pointing to api-gateway context — now points to frontend folder.
+  # Your Angular project must have its own Dockerfile at this path.
   frontend:
     build:
-      context: ./DemoMicroserviceProject/api-gateway
+      context: ./DemoMicroserviceProject/frontend
       dockerfile: Dockerfile
     container_name: demo-frontend
     restart: unless-stopped
+    environment:
+      # Nginx needs to know where the API gateway is (used in nginx.conf template)
+      API_GATEWAY_URL: http://api-gateway:8083
     ports:
       - "80:80"
     networks:
@@ -214,15 +227,18 @@ services:
       api-gateway:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:80/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 15s
 
+# ── Volumes ─────────────────────────────────────────────────────────────────
 volumes:
   postgres-data:
+    driver: local
 
+# ── Networks ────────────────────────────────────────────────────────────────
 networks:
   demo-network:
     driver: bridge

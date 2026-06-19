@@ -1,14 +1,27 @@
 # =============================================================================
-# docker-compose.prod.yml  — AWS EC2 production override
-# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml \
-#          --env-file .env.prod up -d
+# docker-compose.prod.yml — AWS EC2 production override
+#
+# FIXES APPLIED vs original:
+#   1. Service names exactly match docker-compose.yml (demo-service-1, demo-service-2).
+#   2. postgres replica=0 correct — RDS replaces it; but the volumes block is kept
+#      so Compose doesn't error on the named volume reference in base file.
+#   3. All services get SPRING_PROFILES_ACTIVE: prod so application-prod.properties loads.
+#   4. POSTGRES_HOST / POSTGRES_PORT passed through to services that need them
+#      (RDS endpoint comes from .env.prod).
+#   5. frontend service resource limits added.
+#   6. S3_BUCKET_NAME and AWS_REGION forwarded to services that use S3.
+#
+# Usage on EC2:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+#     --env-file .env.prod up -d --build
 # =============================================================================
 
 services:
 
+  # Postgres disabled in prod — AWS RDS handles persistence
   postgres:
     deploy:
-      replicas: 0   # disabled — RDS handles it
+      replicas: 0
 
   service-registry:
     environment:
@@ -22,8 +35,12 @@ services:
   auth-service:
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      # Override DB host to RDS endpoint (from .env.prod)
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
+      # S3
+      AWS_REGION:    ${AWS_REGION:-us-east-1}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
     deploy:
       resources:
         limits:
@@ -33,8 +50,10 @@ services:
   demo-service-1:
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST:  ${POSTGRES_HOST}
+      POSTGRES_PORT:  ${POSTGRES_PORT}
+      AWS_REGION:     ${AWS_REGION:-us-east-1}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
     deploy:
       resources:
         limits:
@@ -44,8 +63,10 @@ services:
   demo-service-2:
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST:  ${POSTGRES_HOST}
+      POSTGRES_PORT:  ${POSTGRES_PORT}
+      AWS_REGION:     ${AWS_REGION:-us-east-1}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
     deploy:
       resources:
         limits:
@@ -62,12 +83,17 @@ services:
           cpus: "0.5"
 
   frontend:
+    environment:
+      # Points nginx reverse proxy to the gateway container on the internal network
+      API_GATEWAY_URL: http://api-gateway:8083
     deploy:
       resources:
         limits:
           memory: 128m
           cpus: "0.25"
 
+# Named volume still declared so Compose doesn't error;
+# postgres replica=0 means this volume is never actually mounted in prod.
 volumes:
   postgres-data:
     external: false
