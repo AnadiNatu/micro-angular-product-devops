@@ -212,7 +212,7 @@ services:
   # Your Angular project must have its own Dockerfile at this path.
   frontend:
     build:
-      context: ./DemoMicroserviceProject/frontend
+      context: ./frontend/angular-product-management
       dockerfile: Dockerfile
     container_name: demo-frontend
     restart: unless-stopped
