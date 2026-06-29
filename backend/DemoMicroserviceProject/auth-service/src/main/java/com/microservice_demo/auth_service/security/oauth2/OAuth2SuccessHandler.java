@@ -29,8 +29,11 @@ public class OAuth2SuccessHandler
 
     public static final Logger log = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
-    @Value("${app.frontend-url:http://localhost:3000}")
-    private String frontendUrl;
+//    @Value("${app.frontend-url:http://localhost:3000}")
+//    private String frontendUrl;
+
+    @Value("${app.oauth2.redirect-uri}")
+    private String oauthRedirectUri;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -63,8 +66,8 @@ public class OAuth2SuccessHandler
         if (email == null || email.isBlank()) {
 
             response.sendRedirect(
-                    frontendUrl
-                            + "/oauth2/callback?error="
+                    oauthRedirectUri
+                            + "?error="
                             + URLEncoder.encode(
                             "OAuth provider did not return email",
                             StandardCharsets.UTF_8
@@ -94,8 +97,7 @@ public class OAuth2SuccessHandler
 
             // REDIRECT URL
             String redirectUrl =
-                    frontendUrl
-                            + "/oauth2/callback"
+                    oauthRedirectUri
                             + "?token=" + URLEncoder.encode(token, StandardCharsets.UTF_8)
                             + "&refreshToken=" + URLEncoder.encode(refreshToken, StandardCharsets.UTF_8)
                             + "&username=" + URLEncoder.encode(user.getUsername(), StandardCharsets.UTF_8)
@@ -107,8 +109,8 @@ public class OAuth2SuccessHandler
 
         } catch (Exception ex) {
             log.error("[OAUTH2] Success handler failed | error={}", ex.getMessage(), ex);
-            response.sendRedirect(frontendUrl
-                            + "/oauth2/callback?error="
+            response.sendRedirect(oauthRedirectUri
+                            + "?error="
                             + URLEncoder.encode(
                             ex.getMessage(),
                             StandardCharsets.UTF_8));

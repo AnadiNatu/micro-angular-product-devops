@@ -35,57 +35,69 @@ services:
   auth-service:
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      # Override DB host to RDS endpoint (from .env.prod)
+
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
-      # S3
-      AWS_REGION:    ${AWS_REGION:-us-east-1}
+
+      APP_FRONTEND_URL: ${APP_FRONTEND_URL}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS}
+      APP_OAUTH2_REDIRECT_URI: ${APP_OAUTH2_REDIRECT_URI}
+
+      AWS_REGION: ${AWS_REGION}
       S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+
     deploy:
       resources:
         limits:
           memory: 512m
-          cpus: "0.5"
+          cpus: "0.50"
 
   demo-service-1:
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      POSTGRES_HOST:  ${POSTGRES_HOST}
-      POSTGRES_PORT:  ${POSTGRES_PORT}
-      AWS_REGION:     ${AWS_REGION:-us-east-1}
+
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+
+      AWS_REGION: ${AWS_REGION}
       S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+
     deploy:
       resources:
         limits:
           memory: 512m
-          cpus: "0.5"
+          cpus: "0.50"
 
   demo-service-2:
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      POSTGRES_HOST:  ${POSTGRES_HOST}
-      POSTGRES_PORT:  ${POSTGRES_PORT}
-      AWS_REGION:     ${AWS_REGION:-us-east-1}
+
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+
+      AWS_REGION: ${AWS_REGION}
       S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+
     deploy:
       resources:
         limits:
           memory: 512m
-          cpus: "0.5"
+          cpus: "0.50"
 
-  api-gateway:
+    api-gateway:
     environment:
       SPRING_PROFILES_ACTIVE: prod
+
     deploy:
       resources:
         limits:
           memory: 512m
-          cpus: "0.5"
+          cpus: "0.50"
 
   frontend:
-    environment:
-      # Points nginx reverse proxy to the gateway container on the internal network
-      API_GATEWAY_URL: http://api-gateway:8083
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
     deploy:
       resources:
         limits:
