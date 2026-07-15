@@ -71,18 +71,18 @@
               <div class="mb-3">
                 <label class="form-label fw-semibold">
                   <i class="bi bi-envelope me-2 text-primary"></i>
-                  Email Address
+                  Username
                 </label>
                 <input 
-                  type="email" 
+                  type="text" 
                   class="form-control form-control-lg"
-                  [class.is-invalid]="hasError('email')"
-                  formControlName="email"
-                  placeholder="Enter your email">
+                  [class.is-invalid]="hasError('username')"
+                  formControlName="username"
+                  placeholder="Enter your username">
                 
-                @if (hasError('email')) {
+                @if (hasError('username')) {
                   <div class="invalid-feedback">
-                    {{ getErrorMessage('email') }}
+                    {{ getErrorMessage('username') }}
                   </div>
                 }
               </div>

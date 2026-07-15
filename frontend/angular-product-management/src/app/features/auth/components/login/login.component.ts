@@ -5,6 +5,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { LoginCredentials, UserRole } from '../../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 
+
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -21,15 +23,17 @@ export class LoginComponent implements OnInit {
 
   demoCredentials = {
     admin: {
-      email: 'admin@system.com',
-      password: 'admin123',
+      username : 'admin',
+      email: 'blackplaindot+admin@gmail.com',
+      password: 'black_admin@1',
       label: 'Admin Account',
       icon: 'bi-shield-lock-fill',
       color: 'danger'
     },
     user: {
-      email: 'user@system.com',
-      password: 'user123',
+      username : 'user',
+      email: 'blackplaindot+user@gmail.com',
+      password: 'black_user@1',
       label: 'User Account',
       icon: 'bi-person-fill',
       color: 'success'
@@ -43,7 +47,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
@@ -62,7 +66,7 @@ export class LoginComponent implements OnInit {
     }
 
     const credentials: LoginCredentials = {
-      email: this.loginForm.value.email,
+      username: this.loginForm.value.username,
       password: this.loginForm.value.password
     };
 
@@ -105,7 +109,7 @@ export class LoginComponent implements OnInit {
 
   quickLogin(type: 'admin' | 'user'): void {
     const creds = this.demoCredentials[type];
-    this.loginForm.patchValue({ email: creds.email, password: creds.password });
+    this.loginForm.patchValue({ username: creds.username, password: creds.password });
     setTimeout(() => this.onSubmit(), 300);
   }
 

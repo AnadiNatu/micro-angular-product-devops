@@ -106,3 +106,8 @@ export interface BackendOrder {
   orderDate: string;
   deliveryDate?: string;
 }
+
+export interface ImageUploadResponse {
+  message: string;
+  imageUrl: string;
+}

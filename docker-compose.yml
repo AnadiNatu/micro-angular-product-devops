@@ -197,7 +197,7 @@ services:
       start_period: 90s
 
   # ── API Gateway ─────────────────────────────────────────────────────────────
-    api-gateway:
+  api-gateway:
     build:
       context: ./backend/DemoMicroserviceProject/api-gateway
       dockerfile: Dockerfile

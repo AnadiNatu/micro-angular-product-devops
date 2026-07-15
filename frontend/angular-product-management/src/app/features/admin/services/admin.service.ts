@@ -4,9 +4,11 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { map, catchError, delay } from 'rxjs/operators';
 import {
   Product, Order, CreateProductDTO, UpdateProductDTO,
-  CreateOrderDTO, OrderLogDTO, BackendProduct, BackendOrder
+  CreateOrderDTO, OrderLogDTO, BackendProduct, BackendOrder,
+  ImageUploadResponse
 } from '../../../core/models/product.model';
 import { User } from '../../../core/models/user.model';
+import { ImageDeleteResponse } from '../../../core/services/product.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,7 @@ export class AdminService {
     { id: 3, fname: 'Jane', lname: 'Smith', email: 'jane.smith@example.com', role: 'USER' as any, phoneNumber: '+1 (555) 123-7890' },
     { id: 4, fname: 'Bob', lname: 'Johnson', email: 'bob.j@example.com', role: 'USER' as any, phoneNumber: '+1 (555) 456-7891' }
   ];
+  productService: any;
 
   constructor(private http: HttpClient) {}
 
@@ -317,5 +320,59 @@ export class AdminService {
       { month: 'May', revenue: 21000 },
       { month: 'Jun', revenue: 25000 }
     ]);
+  }
+
+  deactivateProduct(productId: number): Observable<Product> {
+    return this.productService.deactivateProduct(productId).pipe(
+      map(p => this.mapProduct(p))
+    );
+  }
+
+   // ══════════════════════════════════════════════════════════════════════════
+  //  Supabase image methods — thin pass-throughs to ProductService
+  // ══════════════════════════════════════════════════════════════════════════
+ 
+  /**
+   * Upload a new image for a product.
+   * POST /api/products/{productId}/images/upload
+   */
+  uploadProductImage(productId: number, file: File): Observable<ImageUploadResponse> {
+    return this.productService.uploadProductImage(productId, file);
+  }
+ 
+  /**
+   * Replace an existing image.
+   * PUT /api/products/{productId}/images/update?oldImageUrl=…
+   */
+  updateProductImage(
+    productId   : number,
+    file        : File,
+    oldImageUrl : string | null = null
+  ): Observable<ImageUploadResponse> {
+    return this.productService.updateProductImage(productId, file, oldImageUrl);
+  }
+ 
+  /**
+   * Delete a product image from Supabase.
+   * DELETE /api/products/{productId}/images/delete?imageUrl=…
+   */
+  deleteProductImage(productId: number, imageUrl: string): Observable<ImageDeleteResponse> {
+    return this.productService.deleteProductImage(productId, imageUrl);
+  }
+
+  private mapProduct(p: any): Product {
+    return {
+      productId       : p.productId,
+      productName     : p.productName,
+      productDesc     : p.description    ?? p.productDesc     ?? '',
+      productInventory: p.stockQuantity  ?? p.productInventory ?? 0,
+      price           : p.price,
+      category        : p.category,
+      // prefer imageUrl (Supabase) then fall back to image field
+      image           : p.imageUrl ?? p.image,
+      imageUrl        : p.imageUrl,
+      active          : p.active,
+      stockQuantity   : p.stockQuantity,
+    };
   }
 }
