@@ -26,8 +26,9 @@ services:
   # ── Service Registry (Eureka) ───────────────────────────────────────────────
   service-registry:
     build:
-      image: ./backend/DemoMicroserviceProject/service-registry
+      context: ./backend/DemoMicroserviceProject/service-registry
       dockerfile: Dockerfile
+    image: anadinatu/demo-service-registry:latest  
     container_name: demo-service-registry
     restart: unless-stopped
     environment:
@@ -47,9 +48,9 @@ services:
     # ── Auth Service ────────────────────────────────────────────
   auth-service:
     build:
-      image: anadinatu/demo-auth-service:latest
+      context : ./backend/DemoMicroserviceProject/auth-service
       dockerfile: Dockerfile
-
+    image: anadinatu/demo-auth-service:latest
     container_name: demo-auth-service
 
     restart: unless-stopped
@@ -119,8 +120,9 @@ services:
   # ── Demo Service 1 ──────────────────────────────────────────────────────────
   demo-service-1:
     build:
-      image: anadinatu/demo-service-1:latest
+      context: ./backend/DemoMicroserviceProject/demo-service-1
       dockerfile: Dockerfile
+    image: anadinatu/demo-service-1:latest  
     container_name: demo-service-1
     restart: unless-stopped
     environment:
@@ -222,6 +224,7 @@ services:
    build:
      context: ./frontend/angular-product-management
      dockerfile: Dockerfile
+
    image: anadinatu/demo-frontend:latest
 
    container_name: demo-frontend
@@ -242,12 +245,12 @@ services:
    networks:
      - demo-network
 
-  healthcheck:
-    test: ["CMD-SHELL","wget -qO- http://localhost:80 || exit 1"]
-    interval: 30s
-    timeout: 5s
-    retries: 3
-    start_period: 15s
+   healthcheck:
+     test: ["CMD-SHELL", "wget -qO- http://localhost:80 || exit 1"]
+     interval: 30s
+     timeout: 5s
+     retries: 3
+     start_period: 15s
 
 # ── Volumes ─────────────────────────────────────────────────────────────────
 volumes:
