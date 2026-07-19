@@ -1,26 +1,3 @@
-# =============================================================================
-# docker-compose.yml — Microservice Demo Full Stack (LOCAL / DOCKER profile)
-#
-# FIXES APPLIED vs original:
-#   1. frontend service now uses its own context (./DemoMicroserviceProject/frontend)
-#      instead of the api-gateway context — was a copy-paste bug.
-#   2. Eureka defaultZone URL made consistent (/eureka/ trailing slash everywhere).
-#   3. Service names kept consistent with docker-compose.prod.yml overrides.
-#   4. postgres-init volume mount corrected.
-#   5. auth-service port 8082, demo-service-1 port 8080, demo-service-2 port 8084
-#      — internal only (no host binding needed; gateway :8083 is the single entry).
-#   6. FRONTEND_URL env var passed correctly into auth-service.
-#   7. All healthcheck ports validated against each service's server.port.
-#
-# Usage (local):
-#   cp .env.example .env          # fill in real values
-#   docker compose up --build -d
-#
-# Usage (prod on EC2):
-#   docker compose -f docker-compose.yml -f docker-compose.prod.yml \
-#     --env-file .env.prod up -d
-# =============================================================================
-
 services:
 
   # ── PostgreSQL ──────────────────────────────────────────────────────────────
@@ -49,7 +26,7 @@ services:
   # ── Service Registry (Eureka) ───────────────────────────────────────────────
   service-registry:
     build:
-      context: ./backend/DemoMicroserviceProject/service-registry
+      image: anadinatu/demo-service-registry:latest
       dockerfile: Dockerfile
     container_name: demo-service-registry
     restart: unless-stopped
@@ -70,7 +47,7 @@ services:
     # ── Auth Service ────────────────────────────────────────────
   auth-service:
     build:
-      context: ./backend/DemoMicroserviceProject/auth-service
+      image: anadinatu/demo-auth-service:latest
       dockerfile: Dockerfile
 
     container_name: demo-auth-service
@@ -119,6 +96,10 @@ services:
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
 
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_API_KEY: ${SUPABASE_API_KEY}
+      SUPABASE_BUCKET: ${SUPABASE_BUCKET}
+
     depends_on:
       postgres:
         condition: service_healthy
@@ -138,7 +119,7 @@ services:
   # ── Demo Service 1 ──────────────────────────────────────────────────────────
   demo-service-1:
     build:
-      context: ./backend/DemoMicroserviceProject/demo-service_1
+      image: anadinatu/demo-service-1:latest
       dockerfile: Dockerfile
     container_name: demo-service-1
     restart: unless-stopped
@@ -170,7 +151,7 @@ services:
   # ── Demo Service 2 ──────────────────────────────────────────────────────────
   demo-service-2:
     build:
-      context: ./backend/DemoMicroserviceProject/demo-service_2
+      image: anadinatu/demo-service-2:latest
       dockerfile: Dockerfile
     container_name: demo-service-2
     restart: unless-stopped
@@ -199,7 +180,7 @@ services:
   # ── API Gateway ─────────────────────────────────────────────────────────────
   api-gateway:
     build:
-      context: ./backend/DemoMicroserviceProject/api-gateway
+      image: anadinatu/demo-api-gateway:latest
       dockerfile: Dockerfile
 
     container_name: demo-api-gateway
@@ -236,31 +217,34 @@ services:
   # Your Angular project must have its own Dockerfile at this path.
     # ── Frontend ───────────────────────────────────────────────
   frontend:
-    build:
-      context: ./frontend/angular-product-management
-      dockerfile: Dockerfile
+   build:
+     image: anadinatu/demo-frontend:latest
+     dockerfile: Dockerfile
 
-    container_name: demo-frontend
+   container_name: demo-frontend
 
-    restart: unless-stopped
+   restart: unless-stopped
 
-    ports:
-      - "80:80"
-      - "443:443"
+   ports:
+     - "80:80"
+     - "443:443"
 
-    depends_on:
-      api-gateway:
-        condition: service_healthy
+   volumes:
+     - /etc/letsencrypt:/etc/letsencrypt:ro
 
-    networks:
-      - demo-network
+   depends_on:
+     api-gateway:
+       condition: service_healthy
 
-    healthcheck:
-      test: ["CMD-SHELL","wget -qO- http://localhost:80 || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+   networks:
+     - demo-network
+
+  healthcheck:
+    test: ["CMD-SHELL","wget -qO- http://localhost:80 || exit 1"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 15s
 
 # ── Volumes ─────────────────────────────────────────────────────────────────
 volumes:
