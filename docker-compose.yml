@@ -26,7 +26,7 @@ services:
   # ── Service Registry (Eureka) ───────────────────────────────────────────────
   service-registry:
     build:
-      image: anadinatu/demo-service-registry:latest
+      image: ./backend/DemoMicroserviceProject/service-registry
       dockerfile: Dockerfile
     container_name: demo-service-registry
     restart: unless-stopped
