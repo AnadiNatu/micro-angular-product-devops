@@ -48,7 +48,7 @@ services:
     # ── Auth Service ────────────────────────────────────────────
   auth-service:
     build:
-      context : ./backend/DemoMicroserviceProject/auth-service
+      context: ./backend/DemoMicroserviceProject/auth-service
       dockerfile: Dockerfile
     image: anadinatu/demo-auth-service:latest
     container_name: demo-auth-service
@@ -120,7 +120,7 @@ services:
   # ── Demo Service 1 ──────────────────────────────────────────────────────────
   demo-service-1:
     build:
-      context: ./backend/DemoMicroserviceProject/demo-service-1
+      context: ./backend/DemoMicroserviceProject/demo-service_1
       dockerfile: Dockerfile
     image: anadinatu/demo-service-1:latest  
     container_name: demo-service-1
