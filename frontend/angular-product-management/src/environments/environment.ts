@@ -6,5 +6,5 @@
 export const environment = {
   production: false,
   // Local: Angular dev server proxies /api to localhost:8080
-  apiBaseUrl: "/api"
+  apiBaseUrl: 'http://localhost:8083'
 };

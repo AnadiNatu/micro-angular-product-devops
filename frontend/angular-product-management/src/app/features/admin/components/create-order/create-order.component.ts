@@ -11,7 +11,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-create-order',
   templateUrl: './create-order.component.html',
   styleUrls: ['./create-order.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe],
+  imports: [CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe],
 })
 export class CreateOrderComponent implements OnInit {
   orderForm: FormGroup;

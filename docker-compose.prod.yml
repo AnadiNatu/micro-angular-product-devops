@@ -1,41 +1,22 @@
 services:
 
-  # ── PostgreSQL ──────────────────────────────────────────────────────────────
-  postgres:
-    image: postgres:16-alpine
-    container_name: demo-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER:     ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB:       postgres
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d:ro   # init scripts create per-service DBs
-    ports:
-      - "5432:5432"
-    networks:
-      - demo-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-  # ── Service Registry (Eureka) ───────────────────────────────────────────────
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Eureka Service Registry
+  # ─────────────────────────────────────────────────────────────────────────────
   service-registry:
-    build:
-      image: anadinatu/demo-service-registry:latest
-      dockerfile: Dockerfile
+    image: anadinatu/demo-service-registry:latest
     container_name: demo-service-registry
     restart: unless-stopped
+
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+
     ports:
       - "8761:8761"
+
     networks:
       - demo-network
+
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8761/actuator/health || exit 1"]
       interval: 30s
@@ -43,66 +24,55 @@ services:
       retries: 3
       start_period: 60s
 
-  # ── Auth Service ────────────────────────────────────────────────────────────
-    # ── Auth Service ────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Auth Service
+  # ─────────────────────────────────────────────────────────────────────────────
   auth-service:
-    build:
-      image: anadinatu/demo-auth-service:latest
-      dockerfile: Dockerfile
-
+    image: anadinatu/demo-auth-service:latest
     container_name: demo-auth-service
-
     restart: unless-stopped
 
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
 
-      # Database
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+
       AUTH_DB_NAME: ${AUTH_DB_NAME}
       AUTH_DB_USER: ${AUTH_DB_USER}
       AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD}
 
-      # JWT
       JWT_SECRET: ${JWT_SECRET}
 
-      # Frontend
-      APP_FRONTEND_URL: ${APP_FRONTEND_URL}
-      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS}
-      APP_OAUTH2_REDIRECT_URI: ${APP_OAUTH2_REDIRECT_URI}
+      APP_FRONTEND_URL: ${FRONTEND_URL}
+      APP_CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      APP_OAUTH2_REDIRECT_URI: ${OAUTH2_REDIRECT_URI}
 
-      # Mail
       MAIL_HOST: ${MAIL_HOST}
       MAIL_PORT: ${MAIL_PORT}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
 
-      # Google OAuth
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
 
-      # Github OAuth
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
 
-      # Twilio
       TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
       TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
       TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER}
 
-      # Cloudinary
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
 
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_API_KEY: ${SUPABASE_API_KEY}
-      SUPABASE_BUCKET: ${SUPABASE_BUCKET}
+      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET}
 
     depends_on:
-      postgres:
-        condition: service_healthy
       service-registry:
         condition: service_healthy
 
@@ -110,37 +80,48 @@ services:
       - demo-network
 
     healthcheck:
-      test: ["CMD-SHELL","wget -qO- http://localhost:8082/actuator/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8082/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 90s
 
-  # ── Demo Service 1 ──────────────────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Demo Service 1
+  # ─────────────────────────────────────────────────────────────────────────────
   demo-service-1:
-    build:
-      image: anadinatu/demo-service-1:latest
-      dockerfile: Dockerfile
+    image: anadinatu/demo-service-1:latest
     container_name: demo-service-1
     restart: unless-stopped
+
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
-      POSTGRES_HOST:          postgres
-      POSTGRES_PORT:          5432
-      DEMO1_DB_NAME:          ${DEMO1_DB_NAME}
-      DEMO1_DB_USER:          ${DEMO1_DB_USER}
-      DEMO1_DB_PASSWORD:      ${DEMO1_DB_PASSWORD}
-      JWT_SECRET:             ${JWT_SECRET}
-      CLOUDINARY_CLOUD_NAME:  ${CLOUDINARY_CLOUD_NAME}
-      CLOUDINARY_API_KEY:     ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET:  ${CLOUDINARY_API_SECRET}
-    networks:
-      - demo-network
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+
+      DEMO1_DB_NAME: ${DEMO1_DB_NAME}
+      DEMO1_DB_USER: ${DEMO1_DB_USER}
+      DEMO1_DB_PASSWORD: ${DEMO1_DB_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_API_KEY: ${SUPABASE_API_KEY}
+      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET}
+
     depends_on:
-      postgres:
-        condition: service_healthy
       service-registry:
         condition: service_healthy
+
+    networks:
+      - demo-network
+
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
       interval: 30s
@@ -148,28 +129,34 @@ services:
       retries: 3
       start_period: 90s
 
-  # ── Demo Service 2 ──────────────────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Demo Service 2
+  # ─────────────────────────────────────────────────────────────────────────────
   demo-service-2:
-    build:
-      image: anadinatu/demo-service-2:latest
-      dockerfile: Dockerfile
+    image: anadinatu/demo-service-2:latest
     container_name: demo-service-2
     restart: unless-stopped
+
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
-      POSTGRES_HOST:          postgres
-      POSTGRES_PORT:          5432
-      DEMO2_DB_NAME:          ${DEMO2_DB_NAME}
-      DEMO2_DB_USER:          ${DEMO2_DB_USER}
-      DEMO2_DB_PASSWORD:      ${DEMO2_DB_PASSWORD}
-      JWT_SECRET:             ${JWT_SECRET}
-    networks:
-      - demo-network
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+
+      DEMO2_DB_NAME: ${DEMO2_DB_NAME}
+      DEMO2_DB_USER: ${DEMO2_DB_USER}
+      DEMO2_DB_PASSWORD: ${DEMO2_DB_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+
     depends_on:
-      postgres:
-        condition: service_healthy
       service-registry:
         condition: service_healthy
+
+    networks:
+      - demo-network
+
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8084/actuator/health || exit 1"]
       interval: 30s
@@ -177,18 +164,17 @@ services:
       retries: 3
       start_period: 90s
 
-  # ── API Gateway ─────────────────────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # API Gateway
+  # ─────────────────────────────────────────────────────────────────────────────
   api-gateway:
-    build:
-      image: anadinatu/demo-api-gateway:latest
-      dockerfile: Dockerfile
-
+    image: anadinatu/demo-api-gateway:latest
     container_name: demo-api-gateway
-
     restart: unless-stopped
 
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
       JWT_SECRET: ${JWT_SECRET}
 
     ports:
@@ -206,52 +192,43 @@ services:
       - demo-network
 
     healthcheck:
-      test: ["CMD-SHELL","wget -qO- http://localhost:8083/actuator/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8083/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
 
-  # ── Frontend (Angular + Nginx) ──────────────────────────────────────────────
-  # FIX: was incorrectly pointing to api-gateway context — now points to frontend folder.
-  # Your Angular project must have its own Dockerfile at this path.
-    # ── Frontend ───────────────────────────────────────────────
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Angular Frontend
+  # ─────────────────────────────────────────────────────────────────────────────
   frontend:
-   build:
-     image: anadinatu/demo-frontend:latest
-     dockerfile: Dockerfile
+    image: anadinatu/demo-frontend:latest
+    container_name: demo-frontend
+    restart: unless-stopped
 
-   container_name: demo-frontend
+    ports:
+      - "80:80"
+      - "443:443"
 
-   restart: unless-stopped
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
-   ports:
-     - "80:80"
-     - "443:443"
+    depends_on:
+      api-gateway:
+        condition: service_healthy
 
-   volumes:
-     - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - demo-network
 
-   depends_on:
-     api-gateway:
-       condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
-   networks:
-     - demo-network
 
-  healthcheck:
-    test: ["CMD-SHELL","wget -qO- http://localhost:80 || exit 1"]
-    interval: 30s
-    timeout: 5s
-    retries: 3
-    start_period: 15s
-
-# ── Volumes ─────────────────────────────────────────────────────────────────
-volumes:
-  postgres-data:
-    driver: local
-
-# ── Networks ────────────────────────────────────────────────────────────────
 networks:
   demo-network:
     driver: bridge

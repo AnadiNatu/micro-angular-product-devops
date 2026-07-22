@@ -14,7 +14,7 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule, HighlightDirective]
+  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;

@@ -14,7 +14,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , HeaderComponent , SidebarComponent , CustomCurrencyPipe],
+  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective   , CustomCurrencyPipe],
 })
 export class AdminDashboardComponent implements OnInit {
   // Dashboard stats

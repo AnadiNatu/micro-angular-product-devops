@@ -8,7 +8,7 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , RouterModule],
+  imports: [CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , RouterModule],
   standalone: true
 
 })

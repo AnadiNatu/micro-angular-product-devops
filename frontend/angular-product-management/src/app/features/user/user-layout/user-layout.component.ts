@@ -10,7 +10,7 @@ import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.com
 @Component({
   selector: 'app-user-layout',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent],
   templateUrl: './user-layout.component.html',
   styleUrl: './user-layout.component.css'
 })

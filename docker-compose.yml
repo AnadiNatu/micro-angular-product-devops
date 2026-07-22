@@ -32,7 +32,7 @@ services:
     container_name: demo-service-registry
     restart: unless-stopped
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     ports:
       - "8761:8761"
     networks:
@@ -59,8 +59,8 @@ services:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
 
       # Database
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
       AUTH_DB_NAME: ${AUTH_DB_NAME}
       AUTH_DB_USER: ${AUTH_DB_USER}
       AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD}
@@ -126,9 +126,9 @@ services:
     container_name: demo-service-1
     restart: unless-stopped
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
-      POSTGRES_HOST:          postgres
-      POSTGRES_PORT:          5432
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      POSTGRES_HOST:          ${POSTGRES_HOST}
+      POSTGRES_PORT:          ${POSTGRES_PORT}
       DEMO1_DB_NAME:          ${DEMO1_DB_NAME}
       DEMO1_DB_USER:          ${DEMO1_DB_USER}
       DEMO1_DB_PASSWORD:      ${DEMO1_DB_PASSWORD}
@@ -160,8 +160,8 @@ services:
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
-      POSTGRES_HOST:          postgres
-      POSTGRES_PORT:          5432
+      POSTGRES_HOST:          ${POSTGRES_HOST}
+      POSTGRES_PORT:          ${POSTGRES_PORT}
       DEMO2_DB_NAME:          ${DEMO2_DB_NAME}
       DEMO2_DB_USER:          ${DEMO2_DB_USER}
       DEMO2_DB_PASSWORD:      ${DEMO2_DB_PASSWORD}
@@ -192,7 +192,7 @@ services:
     restart: unless-stopped
 
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       JWT_SECRET: ${JWT_SECRET}
 
     ports:

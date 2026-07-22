@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
+import { environment } from '../../../environments/environment';
 
 // ─── Response shapes returned by the Spring controllers ───────────────────────
 
@@ -19,8 +20,10 @@ export interface ImageDeleteResponse {
 @Injectable({ providedIn: 'root' })
 export class ProductService {
 
+  private readonly BASE_SUFFIX = environment.apiBaseUrl;
+
   // All requests go through the API Gateway on 8083
-  private readonly BASE = 'http://localhost:8083/api/products';
+  private readonly BASE = `${this.BASE_SUFFIX}/api/products`;
 
   constructor(private http: HttpClient) {}
 
