@@ -98,8 +98,22 @@
                 <input 
                   type="text" 
                   class="form-control"
-                  formControlName="userName"
+                  formControlName="username"
                   readonly>
+              </div>
+
+              <!-- Total Quantity (Read-only, calculated from items) -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold text-muted">
+                  <i class="bi bi-box me-2"></i>
+                  Total Quantity
+                </label>
+                <input 
+                  type="number" 
+                  class="form-control"
+                  formControlName="totalQuantity"
+                  readonly>
+                <small class="text-muted">Calculated from order items</small>
               </div>
 
               <hr class="my-4">
@@ -109,27 +123,6 @@
                 <i class="bi bi-pencil me-2"></i>
                 Editable Information
               </h6>
-
-              <!-- Order Quantity -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold">
-                  <i class="bi bi-hash me-2 text-info"></i>
-                  Order Quantity
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="number" 
-                  class="form-control form-control-lg"
-                  [class.is-invalid]="hasError('orderQuantity')"
-                  formControlName="orderQuantity"
-                  min="1">
-                
-                @if (hasError('orderQuantity')) {
-                  <div class="invalid-feedback">
-                    {{ getErrorMessage('orderQuantity') }}
-                  </div>
-                }
-              </div>
 
               <!-- Dates Row -->
               <div class="row">
@@ -143,12 +136,12 @@
                   <input 
                     type="date" 
                     class="form-control form-control-lg"
-                    [class.is-invalid]="hasError('estimateDeliveryDate')"
-                    formControlName="estimateDeliveryDate">
+                    [class.is-invalid]="hasError('estimatedDelivery')"
+                    formControlName="estimatedDelivery">
                   
-                  @if (hasError('estimateDeliveryDate')) {
+                  @if (hasError('estimatedDelivery')) {
                     <div class="invalid-feedback">
-                      {{ getErrorMessage('estimateDeliveryDate') }}
+                      {{ getErrorMessage('estimatedDelivery') }}
                     </div>
                   }
                 </div>
@@ -174,7 +167,7 @@
                 </div>
               </div>
 
-              <!-- Order Status -->
+              <!-- Order Status (Editable) -->
               <div class="mb-4">
                 <label class="form-label fw-semibold">
                   <i class="bi bi-flag me-2 text-info"></i>
@@ -235,14 +228,43 @@
             </div>
 
             <div class="mb-3">
-              <small class="text-muted d-block mb-1">Current Quantity</small>
-              <div class="fw-bold">{{ orderData.orderQuantity }} units</div>
+              <small class="text-muted d-block mb-1">Total Quantity</small>
+              <div class="fw-bold">{{ getTotalQuantity() }} units</div>
             </div>
 
             <div class="mb-3">
               <small class="text-muted d-block mb-1">Original Order Date</small>
               <div class="fw-bold">{{ orderData.orderDate | date:'mediumDate' }}</div>
             </div>
+
+            <div class="mb-3">
+              <small class="text-muted d-block mb-1">Total Amount</small>
+              <div class="fw-bold">{{ orderData.totalAmount | currency }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items Breakdown -->
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-header bg-white border-0 py-3">
+            <h6 class="mb-0 fw-bold">
+              <i class="bi bi-box-seam me-2 text-info"></i>
+              Order Items
+            </h6>
+          </div>
+          <div class="card-body">
+            @if (orderData.items && orderData.items.length > 0) {
+              @for (item of orderData.items; track item.orderItemId) {
+                <div class="mb-3 pb-3 border-bottom">
+                  <div class="fw-semibold">{{ item.productName }}</div>
+                  <small class="text-muted">
+                    {{ item.quantity }} × {{ item.unitPrice | currency }} = {{ item.subtotal | currency }}
+                  </small>
+                </div>
+              }
+            } @else {
+              <p class="text-muted small">No items in order</p>
+            }
           </div>
         </div>
 
@@ -251,7 +273,7 @@
           <div class="card-header bg-white border-0 py-3">
             <h6 class="mb-0 fw-bold">
               <i class="bi bi-clock-history me-2 text-info"></i>
-              Change Log
+              Timeline
             </h6>
           </div>
           <div class="card-body">
@@ -263,11 +285,29 @@
                   <div class="small fw-semibold">Order Created</div>
                 </div>
               </div>
+              @if (orderData.shippedDate) {
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-info"></div>
+                  <div class="timeline-content">
+                    <small class="text-muted">{{ orderData.shippedDate | date:'short' }}</small>
+                    <div class="small fw-semibold">Order Shipped</div>
+                  </div>
+                </div>
+              }
+              @if (orderData.deliveryDate) {
+                <div class="timeline-item">
+                  <div class="timeline-marker bg-success"></div>
+                  <div class="timeline-content">
+                    <small class="text-muted">{{ orderData.deliveryDate | date:'short' }}</small>
+                    <div class="small fw-semibold">Order Delivered</div>
+                  </div>
+                </div>
+              }
               <div class="timeline-item">
-                <div class="timeline-marker bg-info"></div>
+                <div class="timeline-marker bg-primary"></div>
                 <div class="timeline-content">
-                  <small class="text-muted">Status: {{ orderData.orderStatus }}</small>
-                  <div class="small fw-semibold">Current Status</div>
+                  <small class="text-muted">Current</small>
+                  <div class="small fw-semibold">Status: {{ orderData.orderStatus }}</div>
                 </div>
               </div>
             </div>

@@ -138,18 +138,18 @@
                   <!-- Order ID -->
                   <td class="fw-bold text-primary">#{{ order.orderId }}</td>
 
-                  <!-- Product Name -->
-                  <td>{{ order.productName }}</td>
+                  <!-- Product Name (FIX: from first item) -->
+                  <td>{{ getOrderProductName(order) }}</td>
 
                   <!-- Customer -->
                   <td>
-                    <div>{{ order.userName }}</div>
+                    <div>{{ order.username }}</div>
                     <small class="text-muted">ID: {{ order.userId }}</small>
                   </td>
 
-                  <!-- Quantity -->
+                  <!-- Quantity (FIX: sum all items) -->
                   <td>
-                    <span class="badge bg-secondary">{{ order.orderQuantity }}</span>
+                    <span class="badge bg-secondary">{{ getOrderTotalQuantity(order) }}</span>
                   </td>
 
                   <!-- Status -->

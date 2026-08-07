@@ -27,9 +27,52 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  // ══════════════════════════════════════════════════════════════════════════
   //  Core product endpoints  (no PageResponse — arrays / single objects only)
-  // ══════════════════════════════════════════════════════════════════════════
+
+
+public mapProduct(product: any): Product {
+  return {
+    productId: product.productId ?? product.id ?? 0,
+
+    productName: product.productName ?? '',
+
+    description: product.description ?? '',
+
+    price: Number(product.price ?? 0),
+
+    sku: product.sku ?? '',
+
+    category: product.category ?? '',
+
+    image: product.image ?? product.imageUrl ?? '',
+
+    imageUrl: product.imageUrl ?? product.image ?? '',
+
+    productOrderIds: product.productOrderIds ?? [],
+
+    active: product.active ?? true,
+
+    stockQuantity: Number(product.stockQuantity ?? 0),
+
+    createdByUsername: product.createdByUsername
+      ?? product.creatorUsername
+      ?? '',
+
+    createdByUserId: Number(
+      product.createdByUserId
+      ?? product.creatorUserId
+      ?? 0
+    ),
+
+    createdOn: product.createdOn
+      ? new Date(product.createdOn)
+      : new Date(),
+
+    updatedOn: product.updatedOn
+      ? new Date(product.updatedOn)
+      : new Date()
+  };
+}
 
   /** GET /api/products  →  Product[] */
   getAllProducts(): Observable<Product[]> {
@@ -107,73 +150,42 @@ export class ProductService {
     return this.http.get<boolean>(`${this.BASE}/${productId}/available`);
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
   //  Supabase image endpoints
   //  Controller base: /api/products/{productId}/images
-  // ══════════════════════════════════════════════════════════════════════════
+  uploadProductImage(productId: number, file: File): Observable<ImageUploadResponse> {
+  const form = new FormData();
+  form.append('file', file);
+  return this.http.post<ImageUploadResponse>(
+    `${this.BASE}/${productId}/images/upload`,     // FIX: singular, matches ProductController
+    form
+  );
+}
 
-  /**
-   * POST /api/products/{productId}/images/upload
-   * Multipart upload — returns { message, imageUrl }.
-   */
-  uploadProductImage(
-    productId: number,
-    file: File
-  ): Observable<ImageUploadResponse> {
-    const form = new FormData();
-    form.append('file', file);
-    return this.http.post<ImageUploadResponse>(
-      `${this.BASE}/${productId}/images/upload`,
-      form
-    );
-  }
+updateProductImage(productId: number, file: File): Observable<ImageUploadResponse> {
+  // Backend's ProductService.uploadProductImage() already handles
+  // "replace if exists" internally — no separate update endpoint needed.
+  const form = new FormData();
+  form.append('file', file);
+  return this.http.post<ImageUploadResponse>(
+    `${this.BASE}/${productId}/images/update`,
+    form
+  );
+}
 
-  /**
-   * PUT /api/products/{productId}/images/update?oldImageUrl=…
-   * Replaces existing image. Pass oldImageUrl so the backend deletes the
-   * previous Supabase file before uploading the new one.
-   * Returns { message, imageUrl }.
-   */
-  updateProductImage(
-    productId: number,
-    file: File,
-    oldImageUrl: string | null = null
-  ): Observable<ImageUploadResponse> {
-    const form = new FormData();
-    form.append('file', file);
-    let params = new HttpParams();
-    if (oldImageUrl) {
-      params = params.set('oldImageUrl', oldImageUrl);
-    }
-    return this.http.put<ImageUploadResponse>(
-      `${this.BASE}/${productId}/images/update`,
-      form,
-      { params }
-    );
-  }
+deleteProductImage(productId: number): Observable<ImageDeleteResponse> {
+  // FIX: backend DELETE /{productId}/image doesn't need imageUrl param —
+  // it reads product.imageUrl from the DB itself.
+  return this.http.delete<ImageDeleteResponse>(`${this.BASE}/${productId}/images/delete`);
+}
 
-  /**
-   * DELETE /api/products/{productId}/images/delete?imageUrl=…
-   * Returns { message } on success.
-   */
-  deleteProductImage(
-    productId: number,
-    imageUrl: string
-  ): Observable<ImageDeleteResponse> {
-    const params = new HttpParams().set('imageUrl', imageUrl);
-    return this.http.delete<ImageDeleteResponse>(
-      `${this.BASE}/${productId}/images/delete`,
-      { params }
-    );
-  }
-
-  /**
-   * GET /api/products/{productId}/images/list
-   * Returns raw JSON string from Supabase Storage listing.
-   */
   listProductImages(productId: number): Observable<string> {
     return this.http.get<string>(
       `${this.BASE}/${productId}/images/list`
     );
   }
+
+  /** GET /api/products/{productId}/image → { imageUrl: string | null } */
+getProductImage(productId: number): Observable<{ imageUrl: string | null }> {
+  return this.http.get<{ imageUrl: string | null }>(`${this.BASE}/${productId}/images/get`);
+}
 }

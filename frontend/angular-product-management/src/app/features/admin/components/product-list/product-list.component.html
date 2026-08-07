@@ -189,7 +189,7 @@
 
                   <!-- Description -->
                   <td>
-                    <small class="text-muted">{{ product.productDesc | slice:0:60 }}...</small>
+                    <small class="text-muted">{{ product.description | slice:0:60 }}...</small>
                   </td>
 
                   <!-- Price -->
@@ -197,15 +197,15 @@
 
                   <!-- Inventory -->
                   <td>
-                    <div class="fw-semibold">{{ product.productInventory }}</div>
+                    <div class="fw-semibold">{{ product.stockQuantity }}</div>
                     <small class="text-muted">units</small>
                   </td>
 
                   <!-- Status -->
                   <td>
                     <span class="badge"
-                      [class]="getStockBadge(product.productInventory).class">
-                      {{ getStockBadge(product.productInventory).label }}
+                      [class]="getStockBadge(product.stockQuantity).class">
+                      {{ getStockBadge(product.stockQuantity).label }}
                     </span>
                   </td>
 

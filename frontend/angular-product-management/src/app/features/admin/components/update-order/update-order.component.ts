@@ -11,7 +11,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-update-order',
   templateUrl: './update-order.component.html',
   styleUrls: ['./update-order.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective],
+  imports: [CommonModule , FormsModule, ReactiveFormsModule],
 })
 export class UpdateOrderComponent implements OnInit {
   orderForm!: FormGroup;
@@ -20,7 +20,7 @@ export class UpdateOrderComponent implements OnInit {
   isLoading: boolean = true;
   isSubmitting: boolean = false;
 
-  statusOptions = ['ORDERED', 'DISPATCHED', 'DELIVERED', 'CANCELLED', 'PENDING', 'SHIPPED'];
+  statusOptions = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED'];
 
   constructor(
     private route: ActivatedRoute,
@@ -48,18 +48,11 @@ export class UpdateOrderComponent implements OnInit {
   private loadOrder(): void {
     this.isLoading = true;
 
-    this.adminService.getAllOrders().subscribe({
-      next: (orders) => {
-        const order = orders.find(o => o.orderId === this.orderId);
-        
-        if (order) {
-          this.orderData = order;
-          this.initializeForm(order);
-          this.isLoading = false;
-        } else {
-          alert('Order not found');
-          this.router.navigate(['/admin/orders']);
-        }
+    this.adminService.getOrderById(this.orderId).subscribe({
+      next: (order) => {
+        this.orderData = order;
+        this.initializeForm(order);
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading order:', error);
@@ -72,16 +65,26 @@ export class UpdateOrderComponent implements OnInit {
 
   /**
    * Initialize form with order data
+   * FIX: Order no longer has flat orderQuantity — it's derived from items[]
    */
   private initializeForm(order: Order): void {
+    // Calculate total quantity from items
+    const totalQuantity = order.items?.reduce((sum, item) => sum + (item.quantity ?? 0), 0) ?? 0;
+    // Get first product name from items
+    const firstProductName = order.items?.[0]?.productName ?? 'Unknown Product';
+
     this.orderForm = this.fb.group({
       orderId: [{ value: order.orderId, disabled: true }],
       orderDate: [{ value: this.formatDateForInput(order.orderDate), disabled: true }],
-      productName: [{ value: order.productName, disabled: true }],
-      userName: [{ value: order.userName, disabled: true }],
+      productName: [{ value: firstProductName, disabled: true }],
+      username: [{ value: order.username, disabled: true }],
       userId: [{ value: order.userId, disabled: true }],
-      orderQuantity: [order.orderQuantity, [Validators.required, Validators.min(1)]],
-      estimateDeliveryDate: [this.formatDateForInput(order.estimateDeliveryDate), Validators.required],
+      // FIX: totalQuantity is now calculated from items, not a direct property
+      totalQuantity: [
+        { value: totalQuantity, disabled: true },
+        [Validators.required, Validators.min(1)]
+      ],
+      estimatedDelivery: [this.formatDateForInput(order.estimatedDelivery), Validators.required],
       deliveryDate: [this.formatDateForInput(order.deliveryDate), Validators.required],
       orderStatus: [order.orderStatus, Validators.required]
     });
@@ -90,7 +93,8 @@ export class UpdateOrderComponent implements OnInit {
   /**
    * Format date for input[type="date"]
    */
-  private formatDateForInput(date: Date): string {
+  private formatDateForInput(date: Date | null | undefined): string {
+    if (!date) return '';
     const d = new Date(date);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -100,6 +104,7 @@ export class UpdateOrderComponent implements OnInit {
 
   /**
    * Handle form submission
+   * FIX: Only status is updatable via backend PUT /orders/{id}/status
    */
   onSubmit(): void {
     if (this.orderForm.invalid) {
@@ -111,15 +116,10 @@ export class UpdateOrderComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    const updatedOrder: Order = {
-      ...this.orderData,
-      orderQuantity: this.orderForm.get('orderQuantity')?.value,
-      estimateDeliveryDate: new Date(this.orderForm.get('estimateDeliveryDate')?.value),
-      deliveryDate: new Date(this.orderForm.get('deliveryDate')?.value),
-      orderStatus: this.orderForm.get('orderStatus')?.value as any
-    };
+    // Only update status (that's what the backend endpoint supports)
+    const newStatus = this.orderForm.get('orderStatus')?.value;
 
-    this.adminService.updateOrder(updatedOrder).subscribe({
+    this.adminService.updateOrderStatus(this.orderId, newStatus).subscribe({
       next: () => {
         console.log('Order updated successfully');
         this.isSubmitting = false;
@@ -156,6 +156,20 @@ export class UpdateOrderComponent implements OnInit {
     }
     
     return '';
+  }
+
+  /**
+   * Get product name from items
+   */
+  getProductName(): string {
+    return this.orderData?.items?.[0]?.productName?.toString() ?? 'Unknown';
+  }
+
+  /**
+   * Get total quantity from items
+   */
+  getTotalQuantity(): number {
+    return this.orderData?.items?.reduce((sum, item) => sum + (item.quantity ?? 0), 0) ?? 0;
   }
 
   /**

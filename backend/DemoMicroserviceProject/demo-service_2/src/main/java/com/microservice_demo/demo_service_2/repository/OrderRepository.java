@@ -33,6 +33,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             Pageable pageable
     );
 
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items WHERE o.orderId = :orderId")
+    Optional<Order> findByIdWithItems(@Param("orderId") Long orderId);
+
     @Query("SELECT o FROM Order o WHERE o.orderStatus IN :statuses")
     Page<Order> findByOrderStatusIn(@Param("statuses") List<OrderStatus> statuses, Pageable pageable);
 
@@ -41,4 +44,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.orderStatus = :status")
     long countByOrderStatus(@Param("status") OrderStatus status);
+
+
+    long countByCreatedOnBetween(LocalDateTime start, LocalDateTime end);
+
+    List<Order> findByCreatedOnBetween(LocalDateTime start, LocalDateTime end);
+
+    List<Order> findByOrderStatus(OrderStatus status);
+
+    List<Order> findByEstimatedDeliveryBeforeAndOrderStatus(LocalDateTime date, OrderStatus status);
+
+    List<Order> findByDeliveryDateBetween(LocalDateTime start, LocalDateTime end);
 }

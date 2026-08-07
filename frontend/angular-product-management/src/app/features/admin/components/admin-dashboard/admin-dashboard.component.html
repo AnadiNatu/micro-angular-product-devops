@@ -171,14 +171,14 @@
                     <!-- Product Info -->
                     <div class="flex-grow-1">
                       <h6 class="mb-1 fw-bold">{{ product.productName }}</h6>
-                      <p class="text-muted small mb-2">{{ product.productDesc | slice:0:50 }}...</p>
+                      <p class="text-muted small mb-2">{{ product.description | slice:0:50 }}...</p>
                       
                       <div class="d-flex justify-content-between align-items-center">
                         <div>
                           <div class="fw-bold text-primary">{{ product.price | customCurrency }}</div>
-                          <small [class]="getStockLevel(product.productInventory).class">
-                            {{ getStockLevel(product.productInventory).label }}
-                            ({{ product.productInventory }})
+                          <small [class]="getStockLevel(product.stockQuantity).class">
+                            {{ getStockLevel(product.stockQuantity).label }}
+                            ({{ product.stockQuantity }})
                           </small>
                         </div>
                       </div>
@@ -233,9 +233,9 @@
               @for (order of recentOrders; track order.orderId) {
                 <tr style="cursor: pointer;" (click)="viewOrder(order.orderId)">
                   <td class="fw-semibold">#{{ order.orderId }}</td>
-                  <td>{{ order.productName }}</td>
-                  <td>{{ order.userName }}</td>
-                  <td>{{ order.orderQuantity }}</td>
+                  <td>{{ order.username }}</td>
+                  <td>{{ order.items[0]?.productName || 'Unknown' }}</td>
+<td>{{ getOrderTotalQuantity(order) }}</td>
                   <td>
                     <span class="badge" [class]="getStatusClass(order.orderStatus)">
                       {{ order.orderStatus }}

@@ -12,9 +12,19 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
 
 @Component({
   selector: 'app-admin-dashboard',
+  standalone: true,
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective   , CustomCurrencyPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterLink,
+    HighlightDirective,
+    // HeaderComponent,
+    SidebarComponent,
+    CustomCurrencyPipe
+  ]
 })
 export class AdminDashboardComponent implements OnInit {
   // Dashboard stats
@@ -160,4 +170,9 @@ export class AdminDashboardComponent implements OnInit {
       return { label: 'In Stock', class: 'text-success' };
     }
   }
+
+    getOrderTotalQuantity(order: Order): number {
+  if (!order.items || order.items.length === 0) return 0;
+  return order.items.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
+}
 }

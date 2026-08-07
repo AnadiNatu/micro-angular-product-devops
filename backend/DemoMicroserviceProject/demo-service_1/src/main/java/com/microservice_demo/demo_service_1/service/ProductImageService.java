@@ -2,6 +2,9 @@ package com.microservice_demo.demo_service_1.service;
 
 import com.microservice_demo.demo_service_1.config.SupabaseConfig;
 //import org.apache.http.HttpEntity;
+import com.microservice_demo.demo_service_1.dto.functionality.ProductDto;
+import com.microservice_demo.demo_service_1.entity.Product;
+import com.microservice_demo.demo_service_1.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -25,46 +28,94 @@ public class ProductImageService {
     @Autowired
     private SupabaseConfig supabaseConfig;
 
-    public String uploadProductImage(Long productId , MultipartFile file) throws IOException {
+    @Autowired
+    private ProductRepository productRepository;
+
+    public String uploadProductImage(Long productId, MultipartFile file) throws IOException {
+        System.out.println("UPLOAD SERVICE START");
+        System.out.println("Product Id : " + productId);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found : " + productId));
+        System.out.println(product);
         String extension = getExtension(file.getOriginalFilename());
-        String filename = "product-" +productId+ "-" + UUID.randomUUID() + "." + extension;
+        String filename = "product-" + productId + "-" + UUID.randomUUID() + "." + extension;
+        // Upload endpoint (NOT public)
         String uploadUrl = supabaseConfig.getStorageBaseUrl() + "/" + filename;
-
         HttpHeaders headers = buildHeaders(file.getContentType());
-        HttpEntity<byte[]> requestEntity = new HttpEntity<byte[]>(file.getBytes() , headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(uploadUrl , HttpMethod.POST , requestEntity , String.class);
+        HttpEntity<byte[]> request = new HttpEntity<>(file.getBytes(), headers);
 
-        if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.CREATED){
-            return supabaseConfig.getPublicUrl(filename);
+        System.out.println("Filename = " + filename);
+        System.out.println("Upload URL = " + uploadUrl);
+
+//        ResponseEntity<String> response = restTemplate.exchange(uploadUrl, HttpMethod.POST, request, String.class);
+        try{
+            ResponseEntity<String> response= restTemplate.exchange(uploadUrl, HttpMethod.POST, request,String.class);
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
         }
-        throw new RuntimeException("Failed to upload image to Supabase . Status: " + response.getStatusCode());
+        catch(HttpClientErrorException ex){
+            System.out.println(ex.getStatusCode());
+            System.out.println(ex.getResponseBodyAsString());
+            throw ex;
+        }
+
+        String publicUrl = supabaseConfig.getPublicUrl(filename);
+
+        product.setImageUrl(publicUrl);
+        productRepository.save(product);
+
+        return publicUrl;
     }
 
-    public String updateProductImage(Long productId , MultipartFile file , String oldImageUrl) throws IOException {
-        if (oldImageUrl != null && !oldImageUrl.isEmpty()){
-            String oldFileName = extractFileNameFromUrl(oldImageUrl);
-            if (oldImageUrl != null){
-                deleteImageByFileName(oldFileName);
+
+    public String updateProductImage(Long productId, MultipartFile file, String oldImageUrl)
+            throws IOException {
+
+        if (oldImageUrl != null && !oldImageUrl.isBlank()) {
+
+            String oldFile = extractFileNameFromUrl(oldImageUrl);
+
+            if (oldFile != null) {
+                deleteImageByFileName(oldFile);
             }
         }
         return uploadProductImage(productId, file);
     }
 
-    public boolean deleteProductImage(String imageUrl){
-        if (imageUrl==null || imageUrl.isEmpty()){
+    public boolean deleteProductImage(Long productId) {
+
+        Product product =
+                productRepository.findById(productId)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Product not found"));
+
+        String imageUrl = product.getImageUrl();
+
+        if (imageUrl == null ||
+                imageUrl.isBlank()) {
             return false;
         }
 
-        String fileName = extractFileNameFromUrl(imageUrl);
-        if (fileName == null){
+        String fileName =
+                extractFileNameFromUrl(imageUrl);
+
+        if (fileName == null) {
             return false;
         }
-        return deleteImageByFileName(fileName);
+
+        boolean deleted = deleteImageByFileName(fileName);
+
+        if (deleted) {
+            product.setImageUrl(null);
+            productRepository.save(product);
+        }
+
+        return deleted;
     }
 
     private boolean deleteImageByFileName(String fileName){
-        String deleteUrl = supabaseConfig.getSupabaseUrl() + "/" + fileName;
+        String deleteUrl = supabaseConfig.getStorageBaseUrl() + "/" + fileName;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("apiKey" , supabaseConfig.getSupabaseApiKey());
@@ -93,7 +144,10 @@ public class ProductImageService {
     }
 
     public String listProductImages(String prefix){
-        String listUrl = supabaseConfig.getStorageBaseUrl() + "/storage/v1/object/list/" + supabaseConfig.getBucket();
+//        String listUrl = supabaseConfig.getStorageBaseUrl() + "/storage/v1/object/list/" + supabaseConfig.getBucket();
+        String listUrl = supabaseConfig.getSupabaseUrl()
+                        +"/storage/v1/object/list/"
+                        + supabaseConfig.getBucket();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("apiKey" , supabaseConfig.getSupabaseApiKey());
@@ -125,6 +179,7 @@ private HttpHeaders buildHeaders(String contentType) {
     HttpHeaders headers = new HttpHeaders();
     headers.set("apikey", supabaseConfig.getSupabaseApiKey());
     headers.set("Authorization", "Bearer " + supabaseConfig.getSupabaseApiKey());
+    headers.set("x-upsert", "true");
     headers.setContentType(
             contentType != null ? MediaType.parseMediaType(contentType) : MediaType.APPLICATION_OCTET_STREAM
     );
@@ -142,5 +197,22 @@ private HttpHeaders buildHeaders(String contentType) {
         int index = imageUrl.indexOf(marker);
         if (index == -1) return null;
         return imageUrl.substring(index + marker.length());
+    }
+
+    public ProductDto getProduct(Long productId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found with id: " + productId));
+
+        return ProductDto.builder()
+                .productId(product.getProductId())
+//                .productName(product.getProduct())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .category(product.getCategory())
+                .imageUrl(product.getImageUrl())
+                .build();
     }
 }

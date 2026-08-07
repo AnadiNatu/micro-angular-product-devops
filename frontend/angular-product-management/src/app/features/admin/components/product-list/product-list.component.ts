@@ -12,7 +12,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule, HighlightDirective, CustomCurrencyPipe],
+  imports: [ CommonModule, FormsModule, ReactiveFormsModule, CustomCurrencyPipe],
 })
 export class ProductListComponent implements OnInit {
   products        : Product[] = [];
@@ -59,7 +59,7 @@ export class ProductListComponent implements OnInit {
     this.filteredProducts = this.products.filter(p => {
       const matchSearch =
         p.productName.toLowerCase().includes(term) ||
-        p.productDesc.toLowerCase().includes(term);
+        p.description.toLowerCase().includes(term);
       const matchCat =
         this.selectedCategory === 'all' || p.category === this.selectedCategory;
       return matchSearch && matchCat;
@@ -117,7 +117,7 @@ export class ProductListComponent implements OnInit {
 
     // Choose upload vs update based on whether an image already exists
     const request$ = existingUrl
-      ? this.productService.updateProductImage(product.productId, file, existingUrl)
+      ? this.productService.updateProductImage(product.productId, file)
       : this.productService.uploadProductImage(product.productId, file);
 
     request$.subscribe({
@@ -149,7 +149,7 @@ export class ProductListComponent implements OnInit {
     this.imageLoadingMap[product.productId] = true;
 
     this.productService
-      .deleteProductImage(product.productId, product.imageUrl)
+      .deleteProductImage(product.productId)
       .subscribe({
         next: () => {
           // res: { message: string }
@@ -198,4 +198,11 @@ export class ProductListComponent implements OnInit {
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 3000);
   }
+
+  refreshRowImage(product: Product): void {
+  this.productService.getProductImage(product.productId).subscribe({
+    next: res => this.patchProductImage(product.productId, res.imageUrl ?? undefined),
+    error: err => console.error('[ProductList] refresh image error', err),
+  });
+}
 }

@@ -1,231 +1,294 @@
+
 <!-- Create Order Component -->
 <div class="create-order-container">
-  <!-- Page Header -->
-  <div class="mb-4">
-    <h2 class="mb-1 fw-bold">
-      <i class="bi bi-plus-circle me-2 text-success"></i>
-      Create New Order
-    </h2>
-    <p class="text-muted mb-0">Create a new customer order</p>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1 fw-bold">
+        <i class="bi bi-cart-plus me-2 text-success"></i>Create Order
+      </h2>
+      <p class="text-muted mb-0">Place a new order for a customer</p>
+    </div>
+    <button class="btn btn-outline-secondary" (click)="cancel()">
+      <i class="bi bi-arrow-left me-2"></i>Back to Orders
+    </button>
   </div>
 
-  <!-- Create Order Form -->
-  <div class="row">
-    <div class="col-lg-8">
-      <div class="card border-0 shadow-sm">
-        <div class="card-header bg-gradient-success text-white py-3">
-          <h5 class="mb-0">
-            <i class="bi bi-info-circle me-2"></i>
-            Order Details
-          </h5>
-        </div>
+  @if (loadingProducts) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-success" role="status"></div>
+      <p class="text-muted mt-3">Loading products...</p>
+    </div>
+  }
 
-        <div class="card-body p-4">
-          <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-            <!-- Product Selection -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">
+  @if (!loadingProducts) {
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+      <div class="row g-4">
+
+        <!-- Left column: Items + User -->
+        <div class="col-lg-7">
+
+          <!-- User ID -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+              <h6 class="mb-0 fw-bold">
+                <i class="bi bi-person me-2 text-success"></i>Customer
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="mb-0">
+                <label class="form-label fw-semibold">
+                  User ID <span class="text-danger">*</span>
+                </label>
+                <input type="number" class="form-control"
+                  formControlName="userId"
+                  [class.is-invalid]="hasError('userId')"
+                  placeholder="Enter user ID">
+                @if (hasError('userId')) {
+                  <div class="invalid-feedback">User ID is required</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Items FormArray -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+              <h6 class="mb-0 fw-bold">
                 <i class="bi bi-box-seam me-2 text-success"></i>
-                Product
-                <span class="text-danger">*</span>
-              </label>
-              <select 
-                class="form-select form-select-lg"
-                [class.is-invalid]="hasError('productName')"
-                formControlName="productName"
-                (change)="onProductSelect()">
-                <option value="">Select a product</option>
-                @for (product of products; track product.productId) {
-                  <option [value]="product.productName">
-                    {{ product.productName }} - {{ product.price | customCurrency }} 
-                    (Stock: {{ product.productInventory }})
-                  </option>
-                }
-              </select>
-              
-              @if (hasError('productName')) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage('productName') }}
-                </div>
-              }
-            </div>
-
-            <!-- Selected Product Info -->
-            @if (selectedProduct) {
-              <div class="alert alert-info mb-4">
-                <div class="row">
-                  <div class="col-md-6">
-                    <small class="text-muted d-block">Product Price</small>
-                    <strong>{{ selectedProduct.price | customCurrency }}</strong>
-                  </div>
-                  <div class="col-md-6">
-                    <small class="text-muted d-block">Available Stock</small>
-                    <strong>{{ selectedProduct.productInventory }} units</strong>
-                  </div>
-                </div>
-              </div>
-            }
-
-            <!-- Order Quantity -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">
-                <i class="bi bi-hash me-2 text-success"></i>
-                Order Quantity
-                <span class="text-danger">*</span>
-              </label>
-              <input 
-                type="number" 
-                class="form-control form-control-lg"
-                [class.is-invalid]="hasError('orderQuantity')"
-                formControlName="orderQuantity"
-                min="1"
-                placeholder="Enter quantity">
-              
-              @if (hasError('orderQuantity')) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage('orderQuantity') }}
-                </div>
-              }
-            </div>
-
-            <!-- Dates Row -->
-            <div class="row">
-              <!-- Estimated Delivery Date -->
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">
-                  <i class="bi bi-calendar-event me-2 text-success"></i>
-                  Estimated Delivery Date
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="date" 
-                  class="form-control form-control-lg"
-                  [class.is-invalid]="hasError('estimateDeliveryDate')"
-                  formControlName="estimateDeliveryDate">
-                
-                @if (hasError('estimateDeliveryDate')) {
-                  <div class="invalid-feedback">
-                    {{ getErrorMessage('estimateDeliveryDate') }}
-                  </div>
-                }
-              </div>
-
-              <!-- Actual Delivery Date -->
-              <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">
-                  <i class="bi bi-calendar-check me-2 text-success"></i>
-                  Actual Delivery Date
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="date" 
-                  class="form-control form-control-lg"
-                  [class.is-invalid]="hasError('deliveryDate')"
-                  formControlName="deliveryDate">
-                
-                @if (hasError('deliveryDate')) {
-                  <div class="invalid-feedback">
-                    {{ getErrorMessage('deliveryDate') }}
-                  </div>
-                }
-              </div>
-            </div>
-
-            <!-- Order Status -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold">
-                <i class="bi bi-flag me-2 text-success"></i>
-                Order Status
-                <span class="text-danger">*</span>
-              </label>
-              <select 
-                class="form-select form-select-lg"
-                formControlName="orderStatus">
-                @for (status of statusOptions; track status) {
-                  <option [value]="status">{{ status }}</option>
-                }
-              </select>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="d-flex justify-content-between mt-4">
-              <button 
-                type="button" 
-                class="btn btn-outline-secondary btn-lg"
-                (click)="cancel()"
-                [disabled]="isSubmitting">
-                <i class="bi bi-x-circle me-2"></i>
-                Cancel
-              </button>
-
-              <button 
-                type="submit" 
-                class="btn btn-success btn-lg"
-                [disabled]="isSubmitting || orderForm.invalid">
-                @if (isSubmitting) {
-                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                  Creating...
-                } @else {
-                  <i class="bi bi-check-circle me-2"></i>
-                  Create Order
-                }
+                Order Items
+              </h6>
+              <button type="button" class="btn btn-sm btn-outline-success" (click)="addItem()">
+                <i class="bi bi-plus-circle me-1"></i>Add Item
               </button>
             </div>
-          </form>
+            <div class="card-body">
+
+              <div formArrayName="items">
+                @for (ctrl of itemControls(); track $index) {
+                  <div [formGroupName]="$index" class="row g-2 mb-3 align-items-end">
+
+                    <!-- Product select -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">
+                        Product <span class="text-danger">*</span>
+                      </label>
+                      <select class="form-select"
+                        formControlName="productId"
+                        [class.is-invalid]="itemHasError($index, 'productId')">
+                        <option value="">— Select product —</option>
+                        @for (p of products; track p.productId) {
+                          <option [value]="p.productId">
+                            {{ p.productName }}
+                            (Stock: {{ p.stockQuantity ?? 0 }})
+                          </option>
+                        }
+                      </select>
+                      @if (itemHasError($index, 'productId')) {
+                        <div class="text-danger small mt-1">Product is required</div>
+                      }
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="col-md-3">
+                      <label class="form-label fw-semibold small">
+                        Quantity <span class="text-danger">*</span>
+                      </label>
+                      <input type="number" class="form-control"
+                        formControlName="quantity"
+                        [class.is-invalid]="itemHasError($index, 'quantity')"
+                        min="1">
+                      @if (itemHasError($index, 'quantity')) {
+                        <div class="text-danger small mt-1">Min 1</div>
+                      }
+                    </div>
+
+                    <!-- Unit price display -->
+                    <div class="col-md-2">
+                      <label class="form-label fw-semibold small">Unit Price</label>
+                      <div class="form-control bg-light text-muted">
+                        {{ getProductPrice(ctrl.get('productId')?.value) | currency }}
+                      </div>
+                    </div>
+
+                    <!-- Remove -->
+                    <div class="col-md-1 d-flex align-items-end">
+                      @if (itemControls().length > 1) {
+                        <button type="button" class="btn btn-outline-danger btn-sm w-100"
+                          (click)="removeItem($index)" title="Remove item">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      }
+                    </div>
+
+                  </div>
+                }
+              </div>
+
+              <!-- Estimated total -->
+              <hr>
+              <div class="d-flex justify-content-end">
+                <div class="fw-bold fs-5">
+                  Est. Total: {{ estimatedTotal | currency }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right column: Shipping -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+              <h6 class="mb-0 fw-bold">
+                <i class="bi bi-truck me-2 text-success"></i>Shipping Details
+              </h6>
+            </div>
+            <div class="card-body">
+
+              <!-- Shipping Name -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">
+                  Full Name <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control"
+                  formControlName="shippingName"
+                  [class.is-invalid]="hasError('shippingName')"
+                  placeholder="Recipient name">
+                @if (hasError('shippingName')) {
+                  <div class="invalid-feedback">Name is required</div>
+                }
+              </div>
+
+              <!-- Phone + Email -->
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">
+                    Phone <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control"
+                    formControlName="shippingPhone"
+                    [class.is-invalid]="hasError('shippingPhone')"
+                    placeholder="+91 ...">
+                  @if (hasError('shippingPhone')) {
+                    <div class="invalid-feedback">Phone is required</div>
+                  }
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">
+                    Email <span class="text-danger">*</span>
+                  </label>
+                  <input type="email" class="form-control"
+                    formControlName="shippingEmail"
+                    [class.is-invalid]="hasError('shippingEmail')"
+                    placeholder="email@example.com">
+                  @if (hasError('shippingEmail')) {
+                    <div class="invalid-feedback">Valid email is required</div>
+                  }
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">
+                  Street Address <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control"
+                  formControlName="shippingAddress"
+                  [class.is-invalid]="hasError('shippingAddress')"
+                  placeholder="123 Main St">
+                @if (hasError('shippingAddress')) {
+                  <div class="invalid-feedback">Address is required</div>
+                }
+              </div>
+
+              <!-- City + State -->
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">
+                    City <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control"
+                    formControlName="shippingCity"
+                    [class.is-invalid]="hasError('shippingCity')"
+                    placeholder="City">
+                  @if (hasError('shippingCity')) {
+                    <div class="invalid-feedback">City is required</div>
+                  }
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">
+                    State <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control"
+                    formControlName="shippingState"
+                    [class.is-invalid]="hasError('shippingState')"
+                    placeholder="State">
+                  @if (hasError('shippingState')) {
+                    <div class="invalid-feedback">State is required</div>
+                  }
+                </div>
+              </div>
+
+              <!-- Country + Postal -->
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">
+                    Country <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control"
+                    formControlName="shippingCountry"
+                    [class.is-invalid]="hasError('shippingCountry')"
+                    placeholder="Country">
+                  @if (hasError('shippingCountry')) {
+                    <div class="invalid-feedback">Country is required</div>
+                  }
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">
+                    Postal Code <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control"
+                    formControlName="postalCode"
+                    [class.is-invalid]="hasError('postalCode')"
+                    placeholder="110001">
+                  @if (hasError('postalCode')) {
+                    <div class="invalid-feedback">Postal code is required</div>
+                  }
+                </div>
+              </div>
+
+              <!-- Notes -->
+              <div class="mb-0">
+                <label class="form-label fw-semibold small">Notes (optional)</label>
+                <textarea class="form-control" formControlName="notes"
+                  rows="2" placeholder="Delivery instructions..."></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success btn-lg"
+              [disabled]="isSubmitting || orderForm.invalid">
+              @if (isSubmitting) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Placing Order...
+              } @else {
+                <i class="bi bi-check-circle me-2"></i>
+                Place Order ({{ estimatedTotal | currency }})
+              }
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+              Cancel
+            </button>
+          </div>
+
         </div>
       </div>
-    </div>
-
-    <!-- Sidebar - Help -->
-    <div class="col-lg-4">
-      <div class="card border-0 shadow-sm bg-success bg-opacity-10">
-        <div class="card-body">
-          <h6 class="fw-bold text-success mb-3">
-            <i class="bi bi-lightbulb me-2"></i>
-            Order Guidelines
-          </h6>
-          <ul class="small text-muted mb-0 ps-3">
-            <li class="mb-2">Select a product with sufficient stock</li>
-            <li class="mb-2">Ensure quantity doesn't exceed inventory</li>
-            <li class="mb-2">Set realistic delivery dates</li>
-            <li class="mb-2">Choose appropriate order status</li>
-            <li class="mb-2">Estimated date should be before actual delivery</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Order Summary -->
-      @if (selectedProduct && orderForm.get('orderQuantity')?.valid) {
-        <div class="card border-0 shadow-sm mt-4">
-          <div class="card-header bg-white border-0">
-            <h6 class="mb-0 fw-bold">
-              <i class="bi bi-receipt me-2 text-success"></i>
-              Order Summary
-            </h6>
-          </div>
-          <div class="card-body">
-            <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Product:</span>
-              <strong>{{ selectedProduct.productName }}</strong>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Unit Price:</span>
-              <strong>{{ selectedProduct.price | customCurrency }}</strong>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Quantity:</span>
-              <strong>{{ orderForm.get('orderQuantity')?.value }}</strong>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-              <span class="fw-bold">Total:</span>
-              <span class="fw-bold text-success fs-5">
-                {{ (selectedProduct.price * orderForm.get('orderQuantity')?.value) | customCurrency }}
-              </span>
-            </div>
-          </div>
-        </div>
-      }
-    </div>
-  </div>
-</div>
+    </form>
+  }

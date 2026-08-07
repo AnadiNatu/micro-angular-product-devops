@@ -11,7 +11,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-order-logs-by-users',
   templateUrl: './order-logs-by-users.component.html',
   styleUrls: ['./order-logs-by-users.component.css'],
-imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe],
+imports: [CommonModule , FormsModule, ReactiveFormsModule , CustomCurrencyPipe],
 })
 export class OrderLogsByUsersComponent implements OnInit {
   logs: OrderLogDTO[] = [];

@@ -28,7 +28,7 @@ interface SystemMetrics {
   selector: 'app-health-monitor',
   templateUrl: './health-monitor.component.html',
   styleUrls: ['./health-monitor.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe]
+  imports: [CommonModule , FormsModule, ReactiveFormsModule]
 })
 export class HealthMonitorComponent implements OnInit, OnDestroy {
   services: ServiceStatus[] = [];

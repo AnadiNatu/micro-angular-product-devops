@@ -45,7 +45,7 @@ export class UserProductComponent {
     this.filtered = this.products.filter(p => {
       const matchSearch = !term ||
         p.productName.toLowerCase().includes(term) ||
-        p.productDesc.toLowerCase().includes(term);
+        p.description.toLowerCase().includes(term);
       const matchCat = this.selectedCategory === 'all' || p.category === this.selectedCategory;
       return matchSearch && matchCat;
     });

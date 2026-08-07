@@ -111,4 +111,8 @@ export class SidebarComponent implements OnInit , OnDestroy {
   isActive(route: string): boolean {
     return this.activeRoute.startsWith(route);
   }
+
+  testClick(): void {
+  console.log('Sidebar clicked');
+}
 }

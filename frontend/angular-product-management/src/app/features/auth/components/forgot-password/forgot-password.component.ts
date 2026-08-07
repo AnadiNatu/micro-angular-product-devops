@@ -10,7 +10,7 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule ],
+  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective],
   standalone: true
 })
 export class ForgotPasswordComponent {

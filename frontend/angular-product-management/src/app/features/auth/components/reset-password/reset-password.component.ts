@@ -10,7 +10,7 @@ import { HighlightDirective } from '../../../../shared/directives/highlight.dire
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
-  imports: [CommonModule , FormsModule, ReactiveFormsModule],
+  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective],
   standalone: true
 })
 export class ResetPasswordComponent {

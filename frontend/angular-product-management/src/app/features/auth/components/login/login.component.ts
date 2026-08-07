@@ -78,20 +78,25 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.loginForm.disable();
 
-    this.authService.login(credentials).subscribe({
-      next: (user) => {
-        this.isLoading = false;
-        this.loginForm.enable();
-        this.showSuccessMessage(user.fname);
-        setTimeout(() => this.redirectAfterLogin(user.role), 1000);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.loginForm.enable();
-        this.errorMessage = error.message || 'Invalid credentials. Please try again.';
-        this.shakeForm();
-      }
-    });
+    this.authService.loginWithToken(credentials).subscribe({
+  next: ({ user, token }) => {
+    this.isLoading = false;
+    this.loginForm.enable();
+
+    this.showSuccessMessage(user.fname);
+
+    setTimeout(() => this.redirectAfterLogin(user.role), 1000);
+  },
+  error: (error) => {
+    this.isLoading = false;
+    this.loginForm.enable();
+
+    this.errorMessage =
+      error.message || 'Invalid credentials. Please try again.';
+
+    this.shakeForm();
+  }
+});
   }
 
   private redirectAfterLogin(role: string): void {

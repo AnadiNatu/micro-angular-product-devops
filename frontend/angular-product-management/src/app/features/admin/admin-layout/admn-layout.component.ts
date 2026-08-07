@@ -6,12 +6,21 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 
-
 @Component({
   selector: 'app-admin-layout',
+  standalone: true,
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css'],
-   imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule  , HeaderComponent , SidebarComponent , RouterOutlet],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterOutlet,
+    RouterLink,
+    HeaderComponent,
+    SidebarComponent,
+    // HighlightDirective
+  ]
 })
 export class AdminLayoutComponent {
   constructor() {

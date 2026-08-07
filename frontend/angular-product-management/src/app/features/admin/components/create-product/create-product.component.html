@@ -102,6 +102,36 @@
                   <div class="invalid-feedback">{{ getErrorMessage('productInventory') }}</div>
                 }
               </div>
+
+              <div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-upc-scan me-2 text-primary"></i>
+      SKU <span class="text-danger">*</span>
+    </label>
+    <input type="text" class="form-control form-control-lg"
+      [class.is-invalid]="hasError('sku')"
+      formControlName="sku"
+      placeholder="e.g. LAP-001">
+    @if (hasError('sku')) {
+      <div class="invalid-feedback">{{ getErrorMessage('sku') }}</div>
+    }
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-award me-2 text-primary"></i>
+      Brand <span class="text-danger">*</span>
+    </label>
+    <input type="text" class="form-control form-control-lg"
+      [class.is-invalid]="hasError('brand')"
+      formControlName="brand"
+      placeholder="e.g. Dell">
+    @if (hasError('brand')) {
+      <div class="invalid-feedback">{{ getErrorMessage('brand') }}</div>
+    }
+  </div>
+</div>
             </div>
 
             <!-- Form Actions -->

@@ -18,7 +18,7 @@ export class UpdateProductComponent implements OnInit {
   productData!: Product;
   isLoading: boolean = true;
   isSubmitting: boolean = false;
-  productName: string = '';
+  productId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,10 +28,11 @@ export class UpdateProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get product name from route
-    this.productName = this.route.snapshot.paramMap.get('name') || '';
+    // Get product ID from route (not name)
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.productId = idParam ? +idParam : 0;
     
-    if (this.productName) {
+    if (this.productId) {
       this.loadProduct();
     } else {
       alert('Invalid product');
@@ -40,23 +41,16 @@ export class UpdateProductComponent implements OnInit {
   }
 
   /**
-   * Load product data
+   * Load product data by ID
    */
   private loadProduct(): void {
     this.isLoading = true;
 
-    this.adminService.getAllProducts().subscribe({
-      next: (products) => {
-        const product = products.find(p => p.productName === this.productName);
-        
-        if (product) {
-          this.productData = product;
-          this.initializeForm(product);
-          this.isLoading = false;
-        } else {
-          alert('Product not found');
-          this.router.navigate(['/admin/products']);
-        }
+    this.adminService.getProduct(this.productId).subscribe({
+      next: (product) => {
+        this.productData = product;
+        this.initializeForm(product);
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading product:', error);
@@ -74,14 +68,15 @@ export class UpdateProductComponent implements OnInit {
     this.productForm = this.fb.group({
       productId: [{ value: product.productId, disabled: true }],
       productName: [{ value: product.productName, disabled: true }],
-      productDesc: [product.productDesc, [Validators.required, Validators.minLength(10)]],
+      description: [product.description || product.description, [Validators.required, Validators.minLength(10)]],
       price: [product.price, [Validators.required, Validators.min(0.01)]],
-      productInventory: [product.productInventory, [Validators.required, Validators.min(0)]]
+      stockQuantity: [product.stockQuantity || 0, [Validators.required, Validators.min(0)]]
     });
   }
 
   /**
    * Handle form submission
+   * FIX: Signature is updateProduct(productId: number, product: Partial<UpdateProductDTO>)
    */
   onSubmit(): void {
     if (this.productForm.invalid) {
@@ -93,14 +88,14 @@ export class UpdateProductComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    const updatedProduct: UpdateProductDTO = {
-      productName: this.productData.productName,
-      productDesc: this.productForm.get('productDesc')?.value,
+    const updatedProduct: Partial<UpdateProductDTO> = {
+      description: this.productForm.get('description')?.value,
       price: this.productForm.get('price')?.value,
-      productInventory: this.productForm.get('productInventory')?.value
+      stockQuantity: this.productForm.get('stockQuantity')?.value
     };
 
-    this.adminService.updateProduct(updatedProduct).subscribe({
+    // FIX: Pass productId as first argument
+    this.adminService.updateProduct(this.productId, updatedProduct).subscribe({
       next: () => {
         console.log('Product updated successfully');
         this.isSubmitting = false;

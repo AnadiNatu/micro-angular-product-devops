@@ -14,7 +14,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;

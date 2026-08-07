@@ -12,11 +12,10 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  
-  private readonly BASE = environment.apiBaseUrl;
 
- private readonly AUTH_URL = `${this.BASE}/api/auth`;
-  private readonly PASSWORD_URL = `${this.BASE}/api/password`;
+  private readonly BASE_SUFFIX = environment.apiBaseUrl;
+ private readonly AUTH_URL = `${this.BASE_SUFFIX}/api/auth`;
+  private readonly PASSWORD_URL = `${this.BASE_SUFFIX}/api/password`;
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -105,6 +104,7 @@ export class AuthService {
       fname,
       lname,
       email: response.email || email,
+      roles,
       role,
       username,
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=4f46e5&color=fff`

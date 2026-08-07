@@ -11,7 +11,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-order-logs-by-product',
   templateUrl: './order-logs-by-product.component.html',
   styleUrls: ['./order-logs-by-product.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe],
+  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective],
 })
 export class OrderLogsByProductComponent {
   productName: string = '';

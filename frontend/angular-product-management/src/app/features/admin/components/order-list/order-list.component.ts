@@ -11,7 +11,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
   selector: 'app-order-list',
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe],
+  imports: [CommonModule , FormsModule, ReactiveFormsModule ],
 })
 export class OrderListComponent implements OnInit {
   orders: Order[] = [];
@@ -57,13 +57,34 @@ export class OrderListComponent implements OnInit {
   }
 
   /**
+   * Get first product name from order items (for display)
+   */
+  getOrderProductName(order: Order): string {
+    if (!order.items || order.items.length === 0) {
+      return `Order #${order.orderId}`;
+    }
+    return order.items[0].productName?.toString() || `Order #${order.orderId}`;
+  }
+
+  /**
+   * Get total quantity from order items
+   */
+  getOrderTotalQuantity(order: Order): number {
+    if (!order.items) return 0;
+    return order.items.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
+  }
+
+  /**
    * Apply filters
    */
   applyFilters(): void {
     this.filteredOrders = this.orders.filter(order => {
-      // Product name filter
+      // Product name filter — check if ANY item matches
       const matchesProduct = !this.productNameFilter || 
-        order.productName.toLowerCase().includes(this.productNameFilter.toLowerCase());
+        (order.items?.some(item => 
+          String(item.productName).toLowerCase()
+            .includes(this.productNameFilter.toLowerCase())
+        ) ?? false);
       
       // User ID filter
       const matchesUser = !this.userIdFilter || 
@@ -98,12 +119,15 @@ export class OrderListComponent implements OnInit {
 
   /**
    * Delete order with confirmation
+   * FIX: Now passes orderId (not userId + productName)
    */
   deleteOrder(order: Order): void {
-    const confirmMessage = `Are you sure you want to delete order #${order.orderId}?\n\nProduct: ${order.productName}\nCustomer: ${order.userName}`;
+    const productNames = order.items?.map(i => i.productName).join(', ') || 'Unknown';
+    const confirmMessage = `Are you sure you want to delete order #${order.orderId}?\n\nProduct: ${productNames}\nCustomer: ${order.username}`;
     
     if (confirm(confirmMessage)) {
-      this.adminService.deleteOrder(order.userId, order.productName).subscribe({
+      // FIX: Pass orderId directly
+      this.adminService.deleteOrder(order.orderId).subscribe({
         next: () => {
           console.log('Order deleted:', order.orderId);
           this.loadOrders();
@@ -135,6 +159,8 @@ export class OrderListComponent implements OnInit {
       'SHIPPED': 'bg-info',
       'ORDERED': 'bg-warning text-dark',
       'PENDING': 'bg-warning text-dark',
+      'CONFIRMED': 'bg-info',
+      'PROCESSING': 'bg-primary',
       'CANCELLED': 'bg-danger'
     };
     
