@@ -23,6 +23,32 @@ services:
       retries: 5
       start_period: 10s
 
+  # ── Kafka (KRaft mode, single-node) ─────────────────────────────────────────
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: demo-kafka
+    restart: unless-stopped
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    volumes:
+      - kafka-data:/tmp/kraft-combined-logs
+    networks:
+      - demo-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s    
+
   # ── Service Registry (Eureka) ───────────────────────────────────────────────
   service-registry:
     build:
@@ -106,6 +132,8 @@ services:
         condition: service_healthy
       service-registry:
         condition: service_healthy
+      kafka:                          # added
+        condition: service_healthy
 
     networks:
       - demo-network
@@ -143,6 +171,8 @@ services:
         condition: service_healthy
       service-registry:
         condition: service_healthy
+      kafka:                          # added
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
       interval: 30s
@@ -172,6 +202,8 @@ services:
       postgres:
         condition: service_healthy
       service-registry:
+        condition: service_healthy
+      kafka:                          # added
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8084/actuator/health || exit 1"]
@@ -255,6 +287,8 @@ services:
 # ── Volumes ─────────────────────────────────────────────────────────────────
 volumes:
   postgres-data:
+    driver: local
+  kafka-data:            # added
     driver: local
 
 # ── Networks ────────────────────────────────────────────────────────────────
