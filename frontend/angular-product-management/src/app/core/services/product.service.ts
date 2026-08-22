@@ -33,44 +33,21 @@ export class ProductService {
 public mapProduct(product: any): Product {
   return {
     productId: product.productId ?? product.id ?? 0,
-
     productName: product.productName ?? '',
-
     description: product.description ?? '',
-
     price: Number(product.price ?? 0),
-
     sku: product.sku ?? '',
-
     category: product.category ?? '',
-
     image: product.image ?? product.imageUrl ?? '',
-
     imageUrl: product.imageUrl ?? product.image ?? '',
-
     productOrderIds: product.productOrderIds ?? [],
-
     active: product.active ?? true,
-
     stockQuantity: Number(product.stockQuantity ?? 0),
-
-    createdByUsername: product.createdByUsername
-      ?? product.creatorUsername
-      ?? '',
-
-    createdByUserId: Number(
-      product.createdByUserId
-      ?? product.creatorUserId
-      ?? 0
-    ),
-
-    createdOn: product.createdOn
-      ? new Date(product.createdOn)
-      : new Date(),
-
-    updatedOn: product.updatedOn
-      ? new Date(product.updatedOn)
-      : new Date()
+    brand: product.brand ?? '',
+    createdByUsername: product.createdByUsername ?? product.creatorUsername?? '',
+    createdByUserId: Number(product.createdByUserId?? product.creatorUserId?? 0),
+    createdOn: product.createdOn ? new Date(product.createdOn): new Date(),
+    updatedOn: product.updatedOn ? new Date(product.updatedOn): new Date()
   };
 }
 
@@ -95,6 +72,8 @@ public mapProduct(product: any): Product {
     description: string;
     price: number;
     stockQuantity: number;
+    sku?: string;
+    brand?: string;
     category?: string;
   }): Observable<Product> {
     return this.http.post<Product>(this.BASE, payload);
@@ -155,10 +134,8 @@ public mapProduct(product: any): Product {
   uploadProductImage(productId: number, file: File): Observable<ImageUploadResponse> {
   const form = new FormData();
   form.append('file', file);
-  return this.http.post<ImageUploadResponse>(
-    `${this.BASE}/${productId}/images/upload`,     // FIX: singular, matches ProductController
-    form
-  );
+  return this.http.post<ImageUploadResponse>(`${this.BASE}/${productId}/images/upload`,     // FIX: singular, matches ProductController
+form);
 }
 
 updateProductImage(productId: number, file: File): Observable<ImageUploadResponse> {

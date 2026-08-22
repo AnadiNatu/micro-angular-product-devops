@@ -61,15 +61,15 @@
                 Description <span class="text-danger">*</span>
               </label>
               <textarea class="form-control"
-                [class.is-invalid]="hasError('productDesc')"
-                formControlName="productDesc"
+                [class.is-invalid]="hasError('description')"
+                formControlName="description"
                 rows="4"
                 placeholder="Enter product description"></textarea>
-              @if (hasError('productDesc')) {
-                <div class="invalid-feedback">{{ getErrorMessage('productDesc') }}</div>
+              @if (hasError('description')) {
+                <div class="invalid-feedback">{{ getErrorMessage('description') }}</div>
               }
               <small class="text-muted">
-                {{ productForm.get('productDesc')?.value?.length || 0 }} characters
+                {{ productForm.get('description')?.value?.length || 0 }} characters
               </small>
             </div>
 
@@ -95,11 +95,11 @@
                   Inventory <span class="text-danger">*</span>
                 </label>
                 <input type="number" class="form-control form-control-lg"
-                  [class.is-invalid]="hasError('productInventory')"
-                  formControlName="productInventory"
+                  [class.is-invalid]="hasError('stockQuantity')"
+                  formControlName="stockQuantity"
                   placeholder="0" min="0">
-                @if (hasError('productInventory')) {
-                  <div class="invalid-feedback">{{ getErrorMessage('productInventory') }}</div>
+                @if (hasError('stockQuantity')) {
+                  <div class="invalid-feedback">{{ getErrorMessage('stockQuantity') }}</div>
                 }
               </div>
 

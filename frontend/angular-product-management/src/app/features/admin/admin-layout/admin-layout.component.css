@@ -1,44 +1,266 @@
-/* Admin Layout Styles */
+/* =========================================================
+   ADMIN LAYOUT
+   ========================================================= */
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+/* =========================================================
+   ROOT
+   ========================================================= */
 
 .admin-layout {
+  width: 100%;
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
+
   background: #f9fafb;
+
+  overflow-x: hidden;
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+app-header {
+  display: block;
+
+  width: 100%;
+
+  /*
+   * Header is fixed by the shared HeaderComponent.
+   * Keep the layout below it at the correct vertical position.
+   */
+  flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   SIDEBAR + MAIN CONTENT
+   ========================================================= */
 
 .layout-container {
   display: flex;
-  flex: 1;
-  padding-top: 64px; /* Height of fixed header */
+
+  width: 100%;
+  min-height: calc(100vh - 64px);
+
+  /*
+   * Header is fixed, therefore content starts below it.
+   */
+  padding-top: 64px;
+
+  box-sizing: border-box;
+
+  flex: 1 1 auto;
+
+  /*
+   * IMPORTANT:
+   * Do NOT add margin-left to .main-content.
+   * Sidebar already occupies space inside this flex container.
+   */
 }
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar-container {
+  flex: 0 0 260px;
+
+  width: 260px;
+  min-width: 260px;
+
+  height: calc(100vh - 64px);
+
+  position: sticky;
+  top: 64px;
+
+  z-index: 100;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+}
+
+
+/*
+ * Make Angular's component host fill the sidebar wrapper.
+ */
+.sidebar-container app-sidebar {
+  display: block;
+
+  width: 100%;
+  min-height: 100%;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
 
 .main-content {
-  flex: 1;
-  margin-left: 260px; /* Width of sidebar */
+  /*
+   * Take all remaining horizontal space.
+   */
+  flex: 1 1 auto;
+
+  /*
+   * VERY IMPORTANT:
+   * Allows children to shrink instead of creating overflow.
+   */
+  min-width: 0;
+
+  width: auto;
+
   min-height: calc(100vh - 64px);
-  transition: margin-left 0.3s ease;
+
+  /*
+   * NO margin-left here.
+   *
+   * The sidebar is already a flex item.
+   */
+  margin-left: 0;
+
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+
+  transition: width 0.3s ease;
 }
+
+
+/* =========================================================
+   CONTENT WRAPPER
+   ========================================================= */
 
 .content-wrapper {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+
+  /*
+   * Dashboard controls its own spacing.
+   * This prevents double padding.
+   */
+  padding: 0;
+
+  /*
+   * Remove the old max-width + auto-centering.
+   *
+   * The dashboard should use the entire available
+   * width next to the sidebar.
+   */
+  max-width: none;
+
+  margin: 0;
+
+  box-sizing: border-box;
 }
 
-/* Responsive */
+
+/* =========================================================
+   ROUTER OUTLET HOSTING
+   ========================================================= */
+
+router-outlet {
+  display: contents;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
 @media (max-width: 992px) {
-  .main-content {
-    margin-left: 220px;
-  }
-}
 
-@media (max-width: 768px) {
+  .sidebar-container {
+    flex-basis: 220px;
+
+    width: 220px;
+    min-width: 220px;
+  }
+
   .main-content {
+    width: auto;
     margin-left: 0;
   }
 
-  .content-wrapper {
-    padding: 1rem;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .layout-container {
+    min-height: calc(100vh - 64px);
+
+    padding-top: 64px;
+
+    display: block;
   }
+
+
+  /*
+   * Sidebar becomes a collapsed/off-canvas area.
+   *
+   * If your SidebarComponent already has its own mobile
+   * toggle implementation, this wrapper simply stops
+   * reserving desktop width.
+   */
+  .sidebar-container {
+    width: 0;
+    min-width: 0;
+    flex-basis: 0;
+
+    height: auto;
+
+    position: static;
+
+    overflow: visible;
+  }
+
+
+  .main-content {
+    width: 100%;
+    min-width: 0;
+
+    margin-left: 0;
+
+    min-height: calc(100vh - 64px);
+  }
+
+
+  .content-wrapper {
+    width: 100%;
+    padding: 0;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .content-wrapper {
+    width: 100%;
+  }
+
 }

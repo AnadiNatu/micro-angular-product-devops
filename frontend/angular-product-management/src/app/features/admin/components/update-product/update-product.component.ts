@@ -9,6 +9,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
 
 @Component({
   selector: 'app-update-product',
+  standalone: true,
   templateUrl: './update-product.component.html',
   styleUrls: ['./update-product.component.css'],
   imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , CustomCurrencyPipe],
@@ -91,7 +92,9 @@ export class UpdateProductComponent implements OnInit {
     const updatedProduct: Partial<UpdateProductDTO> = {
       description: this.productForm.get('description')?.value,
       price: this.productForm.get('price')?.value,
-      stockQuantity: this.productForm.get('stockQuantity')?.value
+      stockQuantity: this.productForm.get('stockQuantity')?.value,
+      category: this.productForm.get('category')?.value,
+      brand: this.productForm.get('brand')?.value
     };
 
     // FIX: Pass productId as first argument

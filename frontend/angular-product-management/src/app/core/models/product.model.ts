@@ -10,6 +10,7 @@ export interface Product {
   imageUrl?: string;
   productOrderIds?: number[];
   active?: boolean;
+  brand: string;
   stockQuantity?: number;
   createdByUsername : string;
   createdByUserId : number;
@@ -28,12 +29,23 @@ export interface CreateProductDTO {
   createdByUserId ?: number;
 }
 
+export interface PageResponse<T> {
+  content         : T[];
+  totalElements   : number;
+  totalPages      : number;
+  size            : number;
+  number          : number;
+  first           : boolean;
+  last            : boolean;
+  numberOfElements: number;
+}
+
 export interface ProductInfoDto {
   productId : number;
   productName : string;
   description : string;
   price : number;
-  stockQuanity : number;
+  stockQuantity : number;
   category : string;
   sku : string;
   brand : string;
@@ -44,10 +56,11 @@ export interface ProductInfoDto {
 }
 
 export interface UpdateProductDTO {
-  description: string;
-  productDesc: string;
-  stockQuantity: number;
-  price: number;
+  description?: string;
+  price?: number;
+  stockQuantity?: number;
+  category?: string;
+  brand?: string;
 }
 
 export interface CreateDemoEntity1Dto{
@@ -64,13 +77,13 @@ updatedOn : Date;
 }
 
 export enum OrderStatus {
-  ORDERED = 'ORDERED',
-  DISPATCHED = 'DISPATCHED',
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  PROCESSING = 'PROCESSING',
+  SHIPPED = 'SHIPPED',
   DELIVERED = 'DELIVERED',
   CANCELLED = 'CANCELLED',
-  PENDING = 'PENDING',
-  SHIPPED = 'SHIPPED',
-  COMPLETED = 'COMPLETED'
+  REFUNDED = 'REFUNDED'
 }
 
 export interface Order {
@@ -84,19 +97,19 @@ export interface Order {
   shippingName : string;
   shippingPhone : string;
   shippingEmail : string;
-  shippingAdddress : string;
+  shippingAddress : string;
   shippingCity : string;
   shippingState  : string;
   shippingCountry : string;
   postalCode : string;
-  notes : string;
-  orderDate : Date;
-  createdOn : Date;
-  updatedOn : Date;
-  shippedDate : Date;
-  estimatedDelivery : Date;
-  deliveryDate : Date;
-  cancelledDate : Date;
+  notes ?: string;
+  orderDate ?: Date | null;
+  createdOn ?: Date | null;
+  updatedOn ?: Date | null;
+  shippedDate : Date | null;
+  estimatedDelivery : Date | null;
+  deliveryDate : Date | null;
+  cancelledDate : Date | null;
 }
 
 export interface CreateOrderItemDto {
@@ -106,10 +119,12 @@ export interface CreateOrderItemDto {
 
 export interface OrderItemDto{
   orderItemId : number;
+  orderId : number;
   productId : number;
-  productName : number;
+  productName : string;
   category : string;
   brand : string;
+  description: string;
   sku : string;
   creatorUserId : number;
   creatorUsername : string;
@@ -213,4 +228,26 @@ export interface BackendOrder {
 export interface ImageUploadResponse {
   message: string;
   imageUrl: string;
+}
+
+export function getOrderStatusBadgeClass(status: string): string {
+  const map: Record<string, string> = {
+    PENDING   : 'bg-warning text-dark',
+    CONFIRMED : 'bg-info text-dark',
+    PROCESSING: 'bg-primary',
+    SHIPPED   : 'bg-info',
+    DELIVERED : 'bg-success',
+    CANCELLED : 'bg-danger',
+    REFUNDED  : 'bg-secondary',
+  };
+  return map[status?.toUpperCase()] ?? 'bg-secondary';
+}
+
+
+export function getStockBadge(qty: number): { label: string; class: string } {
+  if (qty <= 0) return { label: 'Out of Stock', class: 'bg-danger'             };
+  if (qty < 10) return { label: 'Critical',     class: 'bg-danger'             };
+  if (qty < 20) return { label: 'Low Stock',    class: 'bg-warning text-dark'  };
+  if (qty < 50) return { label: 'Medium Stock', class: 'bg-info text-dark'     };
+  return              { label: 'In Stock',      class: 'bg-success'            };
 }

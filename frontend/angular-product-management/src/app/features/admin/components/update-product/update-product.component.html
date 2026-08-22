@@ -69,13 +69,13 @@
                 </label>
                 <textarea 
                   class="form-control"
-                  [class.is-invalid]="hasError('productDesc')"
-                  formControlName="productDesc"
+                  [class.is-invalid]="hasError('description')"
+                  formControlName="description"
                   rows="4"></textarea>
                 
-                @if (hasError('productDesc')) {
+                @if (hasError('description')) {
                   <div class="invalid-feedback">
-                    {{ getErrorMessage('productDesc') }}
+                    {{ getErrorMessage('description') }}
                   </div>
                 }
               </div>
@@ -112,13 +112,54 @@
                   <input 
                     type="number" 
                     class="form-control form-control-lg"
-                    [class.is-invalid]="hasError('productInventory')"
-                    formControlName="productInventory"
+                    [class.is-invalid]="hasError('stockQuantity')"
+                    formControlName="stockQuantity"
                     min="0">
                   
-                  @if (hasError('productInventory')) {
+                  @if (hasError('stockQuantity')) {
                     <div class="invalid-feedback">
-                      {{ getErrorMessage('productInventory') }}
+                      {{ getErrorMessage('stockQuantity') }}
+                    </div>
+                  }
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-box-seam me-2 text-warning"></i>
+                    category
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    class="form-control form-control-lg"
+                    [class.is-invalid]="hasError('category')"
+                    formControlName="category"
+                    min="0">
+                  
+                  @if (hasError('category')) {
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('category') }}
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-box-seam me-2 text-warning"></i>
+                    brand
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    class="form-control form-control-lg"
+                    [class.is-invalid]="hasError('brand')"
+                    formControlName="brand"
+                    min="0">
+                  
+                  @if (hasError('brand')) {
+                    <div class="invalid-feedback">
+                      {{ getErrorMessage('brand') }}
                     </div>
                   }
                 </div>

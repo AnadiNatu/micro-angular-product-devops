@@ -31,39 +31,92 @@ export class SidebarComponent implements OnInit , OnDestroy {
   private destroy$ = new Subject<void>();
 
   private allMenuItems: MenuItem[] = [
-    { label: 'Dashboard', icon: 'bi-speedometer2', route: '/admin/dashboard', roles: [UserRole.ADMIN] },
-    { label: 'Products', icon: 'bi-box-seam', route: '/admin/products', roles: [UserRole.ADMIN] },
-    { label: 'Orders', icon: 'bi-cart-check', route: '/admin/orders', roles: [UserRole.ADMIN] },
-    { label: 'Users', icon: 'bi-people', route: '/admin/users', roles: [UserRole.ADMIN] },
+  {
+    label: 'Dashboard',
+    icon: 'bi-speedometer2',
+    route: '/admin/dashboard',
+    roles: [UserRole.ADMIN]
+  },
 
-    {
-      label: 'Order Logs',
-      icon: 'bi-journal-text',
-      route: '/admin/logs',
-      roles: [UserRole.ADMIN],
-      children: [
-        {
-          label: 'By Product',
-          icon: 'bi-box',
-          route: '/admin/logs/product',
-          roles: [UserRole.ADMIN]
-        },
-        {
-          label: 'By User',
-          icon: 'bi-person',
-          route: '/admin/logs/users',
-          roles: [UserRole.ADMIN]
-        }
-      ]
-    },
+  {
+    label: 'Products',
+    icon: 'bi-box-seam',
+    route: '/admin/products',
+    roles: [UserRole.ADMIN]
+  },
 
-    { label: 'Health Monitor', icon: 'bi-heart-pulse', route: '/admin/health', roles: [UserRole.ADMIN] },
-    { label: 'My Profile', icon: 'bi-person-circle', route: '/admin/profile', roles: [UserRole.ADMIN] },
+  {
+    label: 'Orders',
+    icon: 'bi-cart-check',
+    route: '/admin/orders',
+    roles: [UserRole.ADMIN]
+  },
 
-    { label: 'Browse Products', icon: 'bi-grid', route: '/user/products', roles: [UserRole.USER] },
-    { label: 'My Orders', icon: 'bi-bag-check', route: '/user/orders', roles: [UserRole.USER] },
-    { label: 'My Profile', icon: 'bi-person-circle', route: '/user/profile', roles: [UserRole.USER] }
-  ];
+  // Order Logs directly below Orders
+  {
+    label: 'Order Logs',
+    icon: 'bi-journal-text',
+    route: '/admin/logs',
+    roles: [UserRole.ADMIN],
+    children: [
+      {
+        label: 'By Product',
+        icon: 'bi-box',
+        route: '/admin/logs/product',
+        roles: [UserRole.ADMIN]
+      },
+      {
+        label: 'By User',
+        icon: 'bi-person',
+        route: '/admin/logs/users',
+        roles: [UserRole.ADMIN]
+      }
+    ]
+  },
+
+  {
+    label: 'Users',
+    icon: 'bi-people',
+    route: '/admin/users',
+    roles: [UserRole.ADMIN]
+  },
+
+  {
+    label: 'Health Monitor',
+    icon: 'bi-heart-pulse',
+    route: '/admin/health',
+    roles: [UserRole.ADMIN]
+  },
+
+  {
+    label: 'My Profile',
+    icon: 'bi-person-circle',
+    route: '/admin/profile',
+    roles: [UserRole.ADMIN]
+  },
+
+  // USER MENU
+  {
+    label: 'Browse Products',
+    icon: 'bi-grid',
+    route: '/user/products',
+    roles: [UserRole.USER]
+  },
+
+  {
+    label: 'My Orders',
+    icon: 'bi-bag-check',
+    route: '/user/orders',
+    roles: [UserRole.USER]
+  },
+
+  {
+    label: 'My Profile',
+    icon: 'bi-person-circle',
+    route: '/user/profile',
+    roles: [UserRole.USER]
+  }
+];
 
   constructor(
     private router: Router,

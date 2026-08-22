@@ -1,6 +1,6 @@
 import { Component, NgModule, OnInit } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
-import { OrderLogDTO } from "../../../../core/models/product.model";
+import { getOrderStatusBadgeClass, Order, OrderLogDTO } from "../../../../core/models/product.model";
 import { AdminService } from "../../services/admin.service";
 import { CommonModule, CurrencyPipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -10,12 +10,16 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
 @Component({
   selector: 'app-order-logs-by-users',
   templateUrl: './order-logs-by-users.component.html',
+  standalone: true,
   styleUrls: ['./order-logs-by-users.component.css'],
 imports: [CommonModule , FormsModule, ReactiveFormsModule , CustomCurrencyPipe],
 })
 export class OrderLogsByUsersComponent implements OnInit {
+ 
+  // Backend returns OrderLogDTO[], NOT Order[]
   logs: OrderLogDTO[] = [];
   filteredLogs: OrderLogDTO[] = [];
+
   userIdentifier: string = '';
   isLoading: boolean = true;
 
@@ -29,47 +33,53 @@ export class OrderLogsByUsersComponent implements OnInit {
   }
 
   /**
-   * Fetch all order logs
+   * Fetch order logs for all users.
+   *
+   * Backend:
+   * GET /api/orders/logs/users
+   *
+   * Frontend service:
+   * Observable<OrderLogDTO[]>
    */
   fetchLogs(): void {
     this.isLoading = true;
 
     this.adminService.getOrderLogsByUsers().subscribe({
-      next: (data) => {
+      next: (data: OrderLogDTO[]) => {
         this.logs = data;
         this.filteredLogs = data;
         this.isLoading = false;
-        console.log('User logs fetched:', data.length);
       },
-      error: (error) => {
-        console.error('Error fetching logs:', error);
-        this.isLoading = false;
+
+      error: (err) => {
+        console.error('[OrderLogsByUsers] Failed to fetch logs:', err);
         this.logs = [];
         this.filteredLogs = [];
+        this.isLoading = false;
       }
     });
   }
 
   /**
-   * Filter logs by user
+   * Filter logs by username.
+   *
+   * OrderLogDTO contains userName, not username/userId.
    */
   filterLogs(): void {
-    const identifier = this.userIdentifier.trim().toLowerCase();
-    
-    if (!identifier) {
+    const term = this.userIdentifier.trim().toLowerCase();
+
+    if (!term) {
       this.filteredLogs = this.logs;
       return;
     }
 
-    this.filteredLogs = this.logs.filter(log => 
-      log.userName.toLowerCase().includes(identifier)
+    this.filteredLogs = this.logs.filter(log =>
+      (log.userName ?? '').toLowerCase().includes(term)
     );
-
-    console.log('Filtered logs:', this.filteredLogs.length);
   }
 
   /**
-   * Clear filter
+   * Clear username filter.
    */
   clearFilter(): void {
     this.userIdentifier = '';
@@ -77,24 +87,12 @@ export class OrderLogsByUsersComponent implements OnInit {
   }
 
   /**
-   * Get status badge class
+   * Status badge styling.
    */
-  getStatusBadgeClass(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'DELIVERED': 'bg-success',
-      'COMPLETED': 'bg-success',
-      'DISPATCHED': 'bg-info',
-      'SHIPPED': 'bg-info',
-      'ORDERED': 'bg-warning text-dark',
-      'PENDING': 'bg-warning text-dark',
-      'CANCELLED': 'bg-danger'
-    };
-    
-    return statusMap[status] || 'bg-secondary';
-  }
+  getStatusBadgeClass = getOrderStatusBadgeClass;
 
   /**
-   * Navigate back
+   * Navigate back to admin dashboard.
    */
   goBack(): void {
     this.router.navigate(['/admin/dashboard']);

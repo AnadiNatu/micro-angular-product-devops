@@ -1,4 +1,4 @@
-<div class="sidebar bg-white border-end vh-100 d-flex flex-column">
+<!-- <div class="sidebar bg-white border-end vh-100 d-flex flex-column">
 
   <div class="sidebar-header p-3 border-bottom">
     <h6 class="mb-0 text-muted text-uppercase fw-semibold">
@@ -103,6 +103,168 @@
 
     </button>
 
+
+  </div>
+
+</div> -->
+<div class="sidebar bg-white border-end vh-100 d-flex flex-column">
+
+  <!-- ========================================================= -->
+  <!-- SIDEBAR HEADER                                            -->
+  <!-- ========================================================= -->
+
+  <div class="sidebar-header p-3 border-bottom">
+
+    <div class="d-flex align-items-center">
+
+      <i class="bi bi-grid-1x2-fill text-primary fs-5 me-2"></i>
+
+      <h6 class="mb-0 text-muted text-uppercase fw-semibold">
+        Navigation
+      </h6>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- NAVIGATION                                                -->
+  <!-- ========================================================= -->
+
+  <nav class="sidebar-nav flex-grow-1 overflow-auto">
+
+    <ul class="nav flex-column p-2">
+
+      @for (item of menuItems; track item.route) {
+
+        <li class="nav-item mb-1">
+
+
+          <!-- ================================================= -->
+          <!-- NORMAL MENU ITEM                                  -->
+          <!-- ================================================= -->
+
+          @if (!item.children) {
+
+            <a
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              [class.active]="isActive(item.route)"
+              class="nav-link d-flex align-items-center gap-3 rounded py-2 px-3">
+
+              <i
+                [class]="'bi ' + item.icon + ' fs-5 sidebar-icon'">
+              </i>
+
+              <span class="sidebar-label">
+                {{ item.label }}
+              </span>
+
+            </a>
+
+          }
+
+
+          <!-- ================================================= -->
+          <!-- MENU ITEM WITH CHILDREN                           -->
+          <!-- ================================================= -->
+
+          @if (item.children) {
+
+            <div class="submenu-parent">
+
+
+              <!-- Parent -->
+              <button
+                type="button"
+                class="nav-link submenu-toggle d-flex align-items-center gap-3 rounded py-2 px-3 w-100 border-0 bg-transparent"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#submenu-' + item.label.replace(' ', '-')"
+                aria-expanded="false">
+
+                <i
+                  [class]="'bi ' + item.icon + ' fs-5 sidebar-icon'">
+                </i>
+
+                <span class="flex-grow-1 text-start sidebar-label">
+                  {{ item.label }}
+                </span>
+
+                <i class="bi bi-chevron-down submenu-arrow"></i>
+
+              </button>
+
+
+              <!-- Children -->
+              <div
+                class="collapse submenu"
+                [id]="'submenu-' + item.label.replace(' ', '-')">
+
+                <ul class="nav flex-column ms-3 ps-3 border-start">
+
+
+                  @for (child of item.children; track child.route) {
+
+                    <li class="nav-item mb-1">
+
+                      <a
+                        [routerLink]="child.route"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        [class.active]="isActive(child.route)"
+                        class="nav-link d-flex align-items-center gap-2 rounded py-2 px-3">
+
+                        <i
+                          [class]="'bi ' + child.icon + ' sidebar-child-icon'">
+                        </i>
+
+                        <span class="sidebar-label">
+                          {{ child.label }}
+                        </span>
+
+                      </a>
+
+                    </li>
+
+                  }
+
+                </ul>
+
+              </div>
+
+            </div>
+
+          }
+
+        </li>
+
+      }
+
+    </ul>
+
+  </nav>
+
+
+  <!-- ========================================================= -->
+  <!-- SIDEBAR FOOTER                                            -->
+  <!-- ========================================================= -->
+
+  <div class="sidebar-footer p-3 border-top">
+
+    <button
+      type="button"
+      class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2"
+      (click)="logout()">
+
+      <i class="bi bi-box-arrow-right"></i>
+
+      <span class="sidebar-label">
+        Logout
+      </span>
+
+    </button>
 
   </div>
 

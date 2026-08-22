@@ -22,6 +22,7 @@ import { Product, CreatedOrderDto, CreateOrderItemDto } from '../../../../core/m
 
 @Component({
   selector: 'app-create-order',
+  standalone: true,
   templateUrl: './create-order.component.html',
   styleUrls: ['./create-order.component.css'],
   imports: [ CommonModule, FormsModule, ReactiveFormsModule]

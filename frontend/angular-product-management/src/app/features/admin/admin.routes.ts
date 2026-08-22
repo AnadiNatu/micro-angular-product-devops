@@ -23,7 +23,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'products', component: ProductListComponent },
       { path: 'create-product', component: CreateProductComponent },
-      { path: 'update-product/:name', component: UpdateProductComponent },
+      { path: 'update-product/:id', component: UpdateProductComponent },
       { path: 'orders', component: OrderListComponent },
       { path: 'create-order', component: CreateOrderComponent },
       { path: 'update-order/:orderId', component: UpdateOrderComponent },

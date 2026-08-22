@@ -9,6 +9,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
 
 @Component({
   selector: 'app-update-order',
+  standalone: true,
   templateUrl: './update-order.component.html',
   styleUrls: ['./update-order.component.css'],
   imports: [CommonModule , FormsModule, ReactiveFormsModule],

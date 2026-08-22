@@ -10,6 +10,7 @@ import { CustomCurrencyPipe } from "../../../../shared/pipes/custom-currency.pip
 
 @Component({
   selector: 'app-product-list',
+  standalone: true,
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
   imports: [ CommonModule, FormsModule, ReactiveFormsModule, CustomCurrencyPipe],
@@ -76,9 +77,16 @@ export class ProductListComponent implements OnInit {
 
   // ─── Product actions ──────────────────────────────────────────────────────
 
-  updateProduct(productName: string): void {
-    this.router.navigate(['/admin/update-product', productName]);
-  }
+  updateProduct(productId: number): void {
+    this.router.navigate(['/admin/update-product',productId]);
+}
+
+// updateProduct(product: Product): void {
+//   this.router.navigate([
+//     '/admin/update-product',
+//     product.productId
+//   ]);
+// }
 
   deleteProduct(product: Product): void {
     if (!confirm(`Delete "${product.productName}"?\nThis cannot be undone.`)) return;

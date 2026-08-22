@@ -10,6 +10,7 @@ import { ProductService } from "../../../../core/services/product.service";
 
 @Component({
   selector: 'app-create-product',
+  standalone: true,
   templateUrl: './create-product.component.html',
   styleUrls: ['./create-product.component.css'],
   imports: [CommonModule , FormsModule, ReactiveFormsModule],
@@ -39,9 +40,9 @@ export class CreateProductComponent {
   ) {
     this.productForm = this.fb.group({
       productName     : ['', [Validators.required, Validators.minLength(3)]],
-      productDesc     : ['', [Validators.required, Validators.minLength(10)]],
+      description     : ['', [Validators.required, Validators.minLength(10)]],
       price           : [0,  [Validators.required, Validators.min(0.01)]],
-      productInventory: [0,  [Validators.required, Validators.min(0)]],
+      stockQuantity: [0,  [Validators.required, Validators.min(0)]],
       category        : ['Electronics', Validators.required],
       sku             : ['', [Validators.required]],
       brand           : ['', [Validators.required]],
@@ -114,9 +115,9 @@ export class CreateProductComponent {
  
     const dto: CreateProductDTO = {
       productName     : this.productForm.value.productName,
-      description     : this.productForm.value.productDesc,
+      description     : this.productForm.value.description,
       price           : this.productForm.value.price,
-      stockQuantity: this.productForm.value.productInventory,
+      stockQuantity: this.productForm.value.stockQuantity,
       category : this.productForm.value.category,
       sku : this.productForm.value.sku,
       brand : this.productForm.value.brand, 

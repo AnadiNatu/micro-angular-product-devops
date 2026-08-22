@@ -1,88 +1,375 @@
-/* Admin Dashboard Styles */
+/* =========================================================
+   ADMIN DASHBOARD
+   ========================================================= */
 
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+
+/* Main dashboard container */
 .admin-dashboard {
-  animation: fadeIn 0.5s ease;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+
+  margin: 0;
+  padding: 24px 28px 40px;
+
+  box-sizing: border-box;
+
+  animation: fadeIn 0.35s ease;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.admin-dashboard > .d-flex:first-child {
+  width: 100%;
+  min-width: 0;
 }
 
-/* Stat Cards */
+.admin-dashboard h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.admin-dashboard .text-muted {
+  color: #6c757d !important;
+}
+
+
+/* =========================================================
+   KPI CARDS
+   ========================================================= */
+
 .stat-card {
   border-radius: 16px;
-  transition: all 0.3s ease;
+  min-width: 0;
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+.stat-card .card-body {
+  padding: 20px;
+}
+
+.stat-card h3 {
+  font-size: 1.75rem;
+  line-height: 1.2;
 }
 
 .stat-icon {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
+
+  flex: 0 0 56px;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Product Cards */
-.product-card {
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
 
-.product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
-}
+/* =========================================================
+   GENERAL CARDS
+   ========================================================= */
 
-.product-img {
-  border: 2px solid #f3f4f6;
-}
-
-/* Table */
-.table tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.table tbody tr:hover {
-  background-color: #f9fafb;
-}
-
-/* Badges */
-.badge {
-  padding: 0.4rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* Cards */
 .card {
   border-radius: 16px;
+  min-width: 0;
 }
 
 .card-header {
   border-radius: 16px 16px 0 0 !important;
 }
 
-/* Responsive */
+
+/* =========================================================
+   PRODUCT INVENTORY
+   ========================================================= */
+
+.product-card {
+  height: 100%;
+  min-width: 0;
+
+  border-radius: 14px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.08) !important;
+}
+
+.product-card .card-body {
+  padding: 18px;
+}
+
+.product-img {
+  width: 80px;
+  height: 80px;
+
+  min-width: 80px;
+
+  object-fit: cover;
+
+  border: 2px solid #f3f4f6;
+}
+
+.product-img-placeholder {
+  width: 80px;
+  height: 80px;
+
+  min-width: 80px;
+}
+
+
+/* Prevent long product names/descriptions
+   from pushing the card wider */
+
+.product-card .flex-grow-1 {
+  min-width: 0;
+}
+
+.product-card h6 {
+  overflow-wrap: anywhere;
+}
+
+.product-card p {
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   INVENTORY FILTER BAR
+   ========================================================= */
+
+.inventory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.inventory-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.inventory-filters .btn {
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RECENT ORDERS TABLE
+   ========================================================= */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  min-width: 700px;
+}
+
+.table th {
+  white-space: nowrap;
+  font-weight: 600;
+  color: #495057;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes fadeIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .admin-dashboard {
+    padding: 22px 20px 35px;
+  }
+
+  .stat-card .card-body {
+    padding: 18px;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 768px) {
-  .btn-group {
+
+  .admin-dashboard {
+    padding: 18px 14px 30px;
+  }
+
+
+  /* Page header */
+  .admin-dashboard > .d-flex:first-child {
     flex-direction: column;
+    align-items: flex-start !important;
+    gap: 14px;
+  }
+
+  .admin-dashboard > .d-flex:first-child .btn-group {
     width: 100%;
   }
 
-  .btn-group .btn {
-    border-radius: 0.375rem !important;
-    margin-bottom: 0.5rem;
+  .admin-dashboard > .d-flex:first-child .btn {
+    width: 100%;
   }
+
+
+  /* KPI cards */
+  .stat-card .card-body {
+    padding: 16px;
+  }
+
+
+  /* Inventory header */
+  .inventory-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inventory-filters {
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .inventory-filters .btn {
+    flex: 1 1 auto;
+  }
+
+
+  /* Product cards */
+  .product-card .card-body {
+    padding: 15px;
+  }
+
+  .product-img,
+  .product-img-placeholder {
+    width: 65px;
+    height: 65px;
+    min-width: 65px;
+  }
+
+
+  /* Header sizes */
+  .admin-dashboard h2 {
+    font-size: 1.6rem;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .admin-dashboard {
+    padding: 14px 10px 24px;
+  }
+
+  .inventory-filters {
+    flex-direction: column;
+  }
+
+  .inventory-filters .btn {
+    width: 100%;
+  }
+
+  .stat-card h3 {
+    font-size: 1.5rem;
+  }
+
 }
