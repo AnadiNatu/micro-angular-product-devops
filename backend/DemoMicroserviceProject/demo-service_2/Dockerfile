@@ -3,6 +3,10 @@ WORKDIR /build
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
+RUN echo "===== KAFKA CONFIG INSIDE DOCKER BUILD =====" && \
+    grep -n "spring.kafka.bootstrap-servers" \
+    src/main/resources/application-prod.properties && \
+    echo "===== END KAFKA CONFIG ====="
 RUN mvn clean package -DskipTests -B
 
 FROM eclipse-temurin:21-jre-alpine
