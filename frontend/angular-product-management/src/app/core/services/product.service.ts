@@ -143,7 +143,7 @@ updateProductImage(productId: number, file: File): Observable<ImageUploadRespons
   // "replace if exists" internally — no separate update endpoint needed.
   const form = new FormData();
   form.append('file', file);
-  return this.http.post<ImageUploadResponse>(
+  return this.http.put<ImageUploadResponse>(
     `${this.BASE}/${productId}/images/update`,
     form
   );

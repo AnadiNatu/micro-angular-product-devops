@@ -85,21 +85,24 @@ export class AdminService {
   //      New backend sends items: OrderItemDto[].
   //      Convenience fields (productName, orderQuantity) are derived from items[].
   private mapOrder(o: any): Order {
-    const items: OrderItemDto[] = (o.items ?? []).map((i: any): OrderItemDto => ({
-      orderItemId:     i.orderItemId,
-      orderId:         i.orderId,
-      productId:       i.productId,
-      productName:     i.productName,
-      category:        i.category,
-      brand:           i.brand,
-      sku:             i.sku,
-      creatorUserId:   i.creatorUserId,
-      description:     i.description,
-      creatorUsername: i.creatorUsername,
-      quantity:        i.quantity,
-      unitPrice:       i.unitPrice,
-      subtotal:        i.subtotal
-    }));
+    const items: OrderItemDto[] = (o.productIds ?? []).map((pid: number, idx: number) => {
+    const detail = (o.productDetails ?? []).find((p: any) => p.productId === pid);
+    return {
+      orderItemId: idx,
+      orderId: o.orderId,
+      productId: pid,
+      productName: detail?.productName ?? '',
+      category: detail?.category ?? '',
+      brand: '',
+      sku: '',
+      creatorUserId: 0,
+      description: '',
+      creatorUsername: '',
+      quantity: (o.quantities ?? [])[idx] ?? 0,
+      unitPrice: detail?.price ?? 0,
+      subtotal: (detail?.price ?? 0) * ((o.quantities ?? [])[idx] ?? 0)
+    } as OrderItemDto;
+  });
 
     return {
       orderId:          o.orderId,
@@ -111,15 +114,14 @@ export class AdminService {
       items,
 
       // Shipping
-      shippingName:    o.shippingName    ?? '',
-      shippingPhone:   o.shippingPhone   ?? '',
-      shippingEmail:   o.shippingEmail   ?? '',
-      shippingAddress: o.shippingAddress ?? '',   // note: triple-d typo is in the model
-      shippingCity:    o.shippingCity    ?? '',
-      shippingState:   o.shippingState   ?? '',
-      shippingCountry: o.shippingCountry ?? '',
-      postalCode:      o.postalCode      ?? '',
-      notes:           o.notes           ?? '',
+      shippingName:    '',
+shippingPhone:   '',
+shippingEmail:   '',
+shippingAddress: o.shippingAddress ?? '',
+shippingCity:    '',
+shippingState:   '',
+shippingCountry: '',
+postalCode:      '',
 
       // Dates
       orderDate:          o.orderDate         ? new Date(o.orderDate)         : new Date(),
@@ -337,12 +339,26 @@ deleteProductImage(productId: number): Observable<ImageDeleteResponse>
   }
 
   // POST /api/orders  — payload is CreatedOrderDto (items[] + shipping)
+  // createOrder(order: CreatedOrderDto): Observable<Order> {
+  //   return this.http.post<any>(`${this.ADMIN_BASE}/orders`, order).pipe(
+  //     map(o => this.mapOrder(o)),
+  //     catchError(err => { throw err; })
+  //   );
+  // }
   createOrder(order: CreatedOrderDto): Observable<Order> {
-    return this.http.post<any>(`${this.ADMIN_BASE}/orders`, order).pipe(
-      map(o => this.mapOrder(o)),
-      catchError(err => { throw err; })
-    );
-  }
+  const backendPayload = {
+    userId: order.userId,
+    productIds: order.items.map(i => i.productId),
+    quantities: order.items.map(i => i.quantity),
+    shippingAddress: [order.shippingAddress, order.shippingCity, order.shippingState, order.postalCode, order.shippingCountry]
+      .filter(Boolean).join(', '),
+    notes: order.notes ?? ''
+  };
+  return this.http.post<any>(`${this.ADMIN_BASE}/orders`, backendPayload).pipe(
+    map(o => this.mapOrder(o)),
+    catchError(err => { throw err; })
+  );
+}
 
   // PUT /api/orders/{orderId}/status?status=XXX
   // FIX: Only status is updatable via the backend endpoint.

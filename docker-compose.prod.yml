@@ -96,7 +96,7 @@ services:
 
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_API_KEY: ${SUPABASE_API_KEY}
-      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET}
+      SUPABASE_BUCKET: ${SUPABASE_BUCKET}
 
     depends_on:
       service-registry:
@@ -139,7 +139,7 @@ services:
 
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_API_KEY: ${SUPABASE_API_KEY}
-      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET}
+      SUPABASE_BUCKET: ${SUPABASE_BUCKET}
 
     depends_on:
       service-registry:
