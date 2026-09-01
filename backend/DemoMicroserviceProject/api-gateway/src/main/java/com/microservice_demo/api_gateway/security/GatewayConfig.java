@@ -91,7 +91,7 @@ public class GatewayConfig {
                         .filters(f -> f.filter(filter))
                         .uri("lb://demo-service1"))
 
-                .route("ds1-products-protected", r -> r.path("/api/products/**")
+                .route("ds1-products-protected", r -> r.path("/api/products","/api/products/**")
                         .filters(f -> f.filter(filter))
                         .uri("lb://demo-service1"))
 
@@ -123,7 +123,7 @@ public class GatewayConfig {
                         .filters(f -> f.filter(filter))
                         .uri("lb://demo-service2"))
 
-                .route("ds2-orders-protected", r -> r.path("/api/orders/**")
+                .route("ds2-orders-protected", r -> r.path("/api/orders/","/api/orders/**")
                         .filters(f -> f.filter(filter))
                         .uri("lb://demo-service2"))
 
