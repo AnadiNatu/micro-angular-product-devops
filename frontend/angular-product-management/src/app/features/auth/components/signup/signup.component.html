@@ -1,5 +1,5 @@
 <!-- Enhanced Signup Component -->
-<div class="signup-page min-vh-100 d-flex align-items-center justify-content-center py-4">
+<!-- <div class="signup-page min-vh-100 d-flex align-items-center justify-content-center py-4">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8">
@@ -170,4 +170,466 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div class="signup-page">
+
+  <div class="signup-background"></div>
+
+  <div class="signup-container">
+
+    <nz-card
+      class="signup-card"
+      [nzBordered]="false">
+
+      <!-- HEADER -->
+      <div class="signup-header">
+
+        <div class="signup-icon">
+          <span nz-icon nzType="user-add" nzTheme="outline"></span>
+        </div>
+
+        <h1>Create Account</h1>
+
+        <p>
+          Join OrderFlow Pro today
+        </p>
+
+      </div>
+
+
+      <!-- FORM CONTENT -->
+      <div class="signup-content">
+
+        <!-- SERVER ERROR -->
+        @if (errorMessage) {
+
+          <nz-alert
+            nzType="error"
+            [nzMessage]="errorMessage"
+            nzShowIcon
+            nzCloseable
+            (nzOnClose)="errorMessage = ''"
+            class="signup-alert">
+          </nz-alert>
+
+        }
+
+
+        <!-- PASSWORD MISMATCH -->
+        @if (getFormError()) {
+
+          <nz-alert
+            nzType="warning"
+            [nzMessage]="getFormError()"
+            nzShowIcon
+            class="signup-alert">
+          </nz-alert>
+
+        }
+
+
+        <form
+          nz-form
+          [formGroup]="signupForm"
+          (ngSubmit)="onSubmit()"
+          nzLayout="vertical">
+
+
+          <!-- NAME -->
+          <div class="form-grid">
+
+            <!-- FIRST NAME -->
+            <nz-form-item>
+
+              <nz-form-label nzRequired>
+                <span
+                  nz-icon
+                  nzType="user"
+                  nzTheme="outline">
+                </span>
+
+                First Name
+              </nz-form-label>
+
+              <nz-form-control
+                [nzErrorTip]="
+                  hasError('fname')
+                    ? getErrorMessage('fname')
+                    : ''
+                ">
+
+                <input
+                  nz-input
+                  type="text"
+                  formControlName="fname"
+                  placeholder="John"
+                  autocomplete="given-name" />
+
+              </nz-form-control>
+
+            </nz-form-item>
+
+
+            <!-- LAST NAME -->
+            <nz-form-item>
+
+              <nz-form-label nzRequired>
+                <span
+                  nz-icon
+                  nzType="user"
+                  nzTheme="outline">
+                </span>
+
+                Last Name
+              </nz-form-label>
+
+              <nz-form-control
+                [nzErrorTip]="
+                  hasError('lname')
+                    ? getErrorMessage('lname')
+                    : ''
+                ">
+
+                <input
+                  nz-input
+                  type="text"
+                  formControlName="lname"
+                  placeholder="Doe"
+                  autocomplete="family-name" />
+
+              </nz-form-control>
+
+            </nz-form-item>
+
+          </div>
+
+
+          <!-- EMAIL -->
+          <nz-form-item>
+
+            <nz-form-label nzRequired>
+              <span
+                nz-icon
+                nzType="mail"
+                nzTheme="outline">
+              </span>
+
+              Email Address
+            </nz-form-label>
+
+            <nz-form-control
+              [nzErrorTip]="
+                hasError('email')
+                  ? getErrorMessage('email')
+                  : ''
+              ">
+
+              <input
+                nz-input
+                type="email"
+                formControlName="email"
+                placeholder="john.doe@example.com"
+                autocomplete="email" />
+
+            </nz-form-control>
+
+          </nz-form-item>
+
+
+          <!-- PHONE -->
+          <nz-form-item>
+
+            <nz-form-label nzRequired>
+              <span
+                nz-icon
+                nzType="phone"
+                nzTheme="outline">
+              </span>
+
+              Phone Number
+            </nz-form-label>
+
+            <nz-form-control
+              [nzErrorTip]="
+                hasError('phoneNumber')
+                  ? getErrorMessage('phoneNumber')
+                  : ''
+              ">
+
+              <input
+                nz-input
+                type="tel"
+                formControlName="phoneNumber"
+                placeholder="+1 (555) 123-4567"
+                autocomplete="tel" />
+
+            </nz-form-control>
+
+          </nz-form-item>
+
+
+          <!-- PASSWORD -->
+          <nz-form-item>
+
+            <nz-form-label nzRequired>
+              <span
+                nz-icon
+                nzType="lock"
+                nzTheme="outline">
+              </span>
+
+              Password
+            </nz-form-label>
+
+            <nz-form-control
+              [nzErrorTip]="
+                hasError('password')
+                  ? getErrorMessage('password')
+                  : ''
+              ">
+
+              <nz-input-group
+                [nzSuffix]="passwordSuffix">
+
+                <input
+                  nz-input
+                  [type]="
+                    showPassword
+                      ? 'text'
+                      : 'password'
+                  "
+                  formControlName="password"
+                  placeholder="Create a strong password"
+                  autocomplete="new-password" />
+
+              </nz-input-group>
+
+
+              <ng-template #passwordSuffix>
+
+                <span
+                  nz-icon
+                  [nzType]="
+                    showPassword
+                      ? 'eye-invisible'
+                      : 'eye'
+                  "
+                  nzTheme="outline"
+                  class="password-toggle"
+                  (click)="
+                    togglePasswordVisibility('password')
+                  ">
+                </span>
+
+              </ng-template>
+
+
+              <!-- PASSWORD STRENGTH -->
+              @if (signupForm.get('password')?.value) {
+
+                <div class="password-strength">
+
+                  <div class="strength-header">
+
+                    <span>
+                      Password Strength
+                    </span>
+
+                    <span
+                      class="strength-label"
+                      [class.weak]="passwordStrength <= 1"
+                      [class.medium]="
+                        passwordStrength > 1 &&
+                        passwordStrength <= 3
+                      "
+                      [class.strong]="
+                        passwordStrength > 3
+                      ">
+
+                      {{ getPasswordStrengthLabel() }}
+
+                    </span>
+
+                  </div>
+
+
+                  <nz-progress
+                    [nzPercent]="
+                      (passwordStrength / 5) * 100
+                    "
+                    [nzStatus]="
+                      getPasswordStrengthStatus()
+                    "
+                    [nzShowInfo]="false"
+                    nzSize="small">
+                  </nz-progress>
+
+                </div>
+
+              }
+
+            </nz-form-control>
+
+          </nz-form-item>
+
+
+          <!-- CONFIRM PASSWORD -->
+          <nz-form-item>
+
+            <nz-form-label nzRequired>
+              <span
+                nz-icon
+                nzType="safety-certificate"
+                nzTheme="outline">
+              </span>
+
+              Confirm Password
+            </nz-form-label>
+
+            <nz-form-control
+              [nzErrorTip]="confirmPasswordError">
+
+              <nz-input-group
+                [nzSuffix]="confirmPasswordSuffix">
+
+                <input
+                  nz-input
+                  [type]="
+                    showConfirmPassword
+                      ? 'text'
+                      : 'password'
+                  "
+                  formControlName="confirmPassword"
+                  placeholder="Re-enter your password"
+                  autocomplete="new-password" />
+
+              </nz-input-group>
+
+
+              <ng-template #confirmPasswordSuffix>
+
+                <span
+                  nz-icon
+                  [nzType]="
+                    showConfirmPassword
+                      ? 'eye-invisible'
+                      : 'eye'
+                  "
+                  nzTheme="outline"
+                  class="password-toggle"
+                  (click)="
+                    togglePasswordVisibility(
+                      'confirmPassword'
+                    )
+                  ">
+                </span>
+
+              </ng-template>
+
+            </nz-form-control>
+
+          </nz-form-item>
+
+
+          <!-- CONFIRM PASSWORD ERROR -->
+          <ng-template #confirmPasswordError>
+
+            @if (hasError('confirmPassword')) {
+
+              {{ getErrorMessage('confirmPassword') }}
+
+            } @else if (signupForm.hasError('passwordMismatch')) {
+
+              Passwords do not match
+
+            }
+
+          </ng-template>
+
+
+          <!-- SUBMIT -->
+          <button
+            nz-button
+            nzType="primary"
+            nzSize="large"
+            nzBlock
+            class="signup-button"
+            type="submit"
+            [nzLoading]="isLoading">
+
+            @if (!isLoading) {
+
+              <span
+                nz-icon
+                nzType="user-add"
+                nzTheme="outline">
+              </span>
+
+            }
+
+            {{ isLoading
+              ? 'Creating account...'
+              : 'Create Account'
+            }}
+
+          </button>
+
+
+          <!-- LOGIN -->
+          <div class="login-link">
+
+            <span>
+              Already have an account?
+            </span>
+
+            <button
+              nz-button
+              nzType="link"
+              type="button"
+              (click)="goToLogin()">
+
+              Sign in here
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <!-- FOOTER -->
+      <div class="signup-footer">
+
+        <button
+          nz-button
+          nzType="text"
+          type="button"
+          (click)="goToHome()">
+
+          <span
+            nz-icon
+            nzType="arrow-left"
+            nzTheme="outline">
+          </span>
+
+          Back to Home
+
+        </button>
+
+        <p>
+          By creating an account, you agree to our
+          <strong>Terms of Service</strong>
+          and
+          <strong>Privacy Policy</strong>.
+        </p>
+
+      </div>
+
+    </nz-card>
+
+  </div>
+
 </div>

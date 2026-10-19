@@ -1,11 +1,49 @@
- <div class="admin-layout">
-      <app-header></app-header>
-      <div class="layout-container">
-        <app-sidebar></app-sidebar>
-        <main class="main-content">
+<div class="user-layout">
+
+  <!-- Ambient 3D background -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="ambient-orb orb-one"></div>
+    <div class="ambient-orb orb-two"></div>
+    <div class="ambient-orb orb-three"></div>
+  </div>
+
+  <!-- Top Header -->
+  <header class="user-header">
+    <app-header></app-header>
+  </header>
+
+  <!-- Main Application Area -->
+  <div class="layout-container">
+
+    <!-- Sidebar -->
+    <aside class="user-sidebar">
+      <app-sidebar></app-sidebar>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <div class="content-stage">
+
+        <!-- Decorative depth layer -->
+        <div class="content-shadow-layer layer-one"></div>
+        <div class="content-shadow-layer layer-two"></div>
+
+        <!-- Actual page surface -->
+        <section class="content-surface">
+
+          <div class="content-glow" aria-hidden="true"></div>
+
           <div class="content-wrapper">
             <router-outlet></router-outlet>
           </div>
-        </main>
+
+        </section>
+
       </div>
-    </div>
+
+    </main>
+
+  </div>
+
+</div>

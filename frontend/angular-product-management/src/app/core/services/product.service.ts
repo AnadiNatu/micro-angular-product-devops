@@ -67,6 +67,7 @@ public mapProduct(product: any): Product {
   }
 
   /** POST /api/products  →  Product */
+  // Need to change the payload to CreateProductDTO
   createProduct(payload: {
     productName: string;
     description: string;
@@ -120,6 +121,7 @@ public mapProduct(product: any): Product {
   }
 
   /** POST /api/products/list  →  Product[]  (fetch by list of IDs) */
+  // Need to use the "PriductInfoDto" model 
   getProductsByIds(ids: number[]): Observable<Product[]> {
     return this.http.post<Product[]>(`${this.BASE}/list`, ids);
   }
@@ -143,7 +145,7 @@ updateProductImage(productId: number, file: File): Observable<ImageUploadRespons
   // "replace if exists" internally — no separate update endpoint needed.
   const form = new FormData();
   form.append('file', file);
-  return this.http.put<ImageUploadResponse>(
+  return this.http.post<ImageUploadResponse>(
     `${this.BASE}/${productId}/images/update`,
     form
   );
@@ -165,4 +167,10 @@ deleteProductImage(productId: number): Observable<ImageDeleteResponse> {
 getProductImage(productId: number): Observable<{ imageUrl: string | null }> {
   return this.http.get<{ imageUrl: string | null }>(`${this.BASE}/${productId}/images/get`);
 }
+
+// Not used/there
+// decrementStock  (api/products/{productId}/stock/decrement  Takes productId number path variable and quantity as parameter and returns Product object with updated stock quantity)
+// getProductOrderStats (api/products/order-stats/batch  Takes list of ids a request body parameter and returns Map<Strng , Object> ) 
+//  
+
 }

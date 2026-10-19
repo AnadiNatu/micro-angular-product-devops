@@ -1,27 +1,18 @@
-
+<!-- 
 <div [class]="getCardClasses()" [appHighlight]="isFeatured ? '#e8f5e9' : ''">
-  <!-- Card Header -->
   <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
     <h5 class="card-title mb-0">{{ title | titlecase }}</h5>
     
-    <!-- Conditional rendering using @if (Angular 17+) -->
     @if (isFeatured) {
       <span class="badge bg-success">
         <i class="bi bi-star-fill me-1"></i> Featured
       </span>
     }
-  </div>
-
-  <!-- Card Body - Content Projection -->
+  </div>  
   <div class="card-body">
-    <!-- 
-      <ng-content> - Content Projection
-      Projects content from parent with selector="[card-body]"
-    -->
     <ng-content select="[card-body]"></ng-content>
   </div>
 
-  <!-- Card Footer with Action Button -->
   <div class="card-footer bg-transparent border-0 pt-0">
     <button 
       class="btn btn-sm btn-primary w-100" 
@@ -31,4 +22,62 @@
       {{ actionLabel }}
     </button>
   </div>
-</div>
+</div> -->
+
+<nz-card
+  [ngClass]="getCardClasses()"
+  [appHighlight]="isFeatured ? '#e8f5e9' : ''"
+  [nzBordered]="true"
+  class="shared-card"
+>
+  <!-- Card Header -->
+  <div class="card-header">
+
+    <h5 class="card-title">
+      {{ title | titlecase }}
+    </h5>
+
+    @if (isFeatured) {
+      <nz-tag
+        nzColor="success"
+        class="featured-tag"
+      >
+        <span
+          nz-icon
+          nzType="star"
+          nzTheme="fill"
+        ></span>
+
+        <span>Featured</span>
+      </nz-tag>
+    }
+
+  </div>
+
+  <!-- Projected Card Content -->
+  <div class="card-content">
+    <ng-content select="[card-body]"></ng-content>
+  </div>
+
+  <!-- Card Footer -->
+  <div class="card-footer">
+
+    <button
+      nz-button
+      nzType="primary"
+      nzSize="small"
+      nzBlock
+      [disabled]="disableAction"
+      (click)="onActionClick($event)"
+    >
+      <span
+        nz-icon
+        nzType="arrow-right"
+        nzTheme="outline"
+      ></span>
+
+      <span>{{ actionLabel }}</span>
+    </button>
+
+  </div>
+</nz-card>

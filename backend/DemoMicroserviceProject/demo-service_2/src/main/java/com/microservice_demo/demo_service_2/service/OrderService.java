@@ -53,10 +53,10 @@ public class OrderService {
 //    @Retry(name = "demoService1")
     @Stopwatch
     @Transactional
-    @Caching(evict = { // added: invalidate list caches so the new order is visible immediately
-            @CacheEvict(value = "userOrders", allEntries = true),
-            @CacheEvict(value = "statusOrders", allEntries = true)
-    })
+//    @Caching(evict = { // added: invalidate list caches so the new order is visible immediately
+//            @CacheEvict(value = "userOrders", allEntries = true),
+//            @CacheEvict(value = "statusOrders", allEntries = true)
+//    })
     public OrderDto createOrder(CreatedOrderDto dto) {
         log.info("Creating order — userId={} itemCount={}", dto.getUserId(), dto.getItems().size());
 

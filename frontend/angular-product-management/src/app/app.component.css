@@ -1,7 +1,7 @@
 /* Root App Component Styles */
 
 /* Loading Overlay */
-.loading-overlay {
+/* .loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,10 +23,10 @@
   width: 3rem;
   height: 3rem;
   border-width: 0.3rem;
-}
+} */
 
 /* Fade in animation */
-@keyframes fadeIn {
+/* @keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -37,4 +37,10 @@
 
 .loading-overlay {
   animation: fadeIn 0.3s ease;
+} */
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
 }

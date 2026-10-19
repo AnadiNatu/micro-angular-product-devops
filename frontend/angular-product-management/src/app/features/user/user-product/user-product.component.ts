@@ -6,11 +6,28 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { CustomCurrencyPipe } from '../../../shared/pipes/custom-currency.pipe';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 @Component({
   selector: 'app-user-product',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomCurrencyPipe, HighlightDirective],
+  imports: [CommonModule, FormsModule, CustomCurrencyPipe, HighlightDirective , 
+    NzButtonModule,
+    NzCardModule,
+    NzEmptyModule,
+    NzIconModule,
+    NzInputModule,
+    NzSelectModule,
+    NzSpinModule,
+    NzTagModule
+  ],
   templateUrl: './user-product.component.html',
   styleUrl: './user-product.component.css'
 })

@@ -16,41 +16,43 @@
             "outputPath": "dist/angular-product-management",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
               }
             ],
             "styles": [
+              "src/theme.less",
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "5MB",
-                  "maximumError": "10MB"
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "5MB",
-                  "maximumError": "4MB"
+                  "maximumWarning": "4MB",
+                  "maximumError": "2MB"
                 }
               ],
               "outputHashing": "all"
@@ -70,8 +72,7 @@
               "buildTarget": "angular-product-management:build:production"
             },
             "development": {
-              "buildTarget": "angular-product-management:build:development",
-              "proxyConfig": "proxy.conf.json"
+              "buildTarget": "angular-product-management:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,7 +83,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               {
@@ -90,7 +94,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           }
         }

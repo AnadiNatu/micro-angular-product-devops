@@ -3,12 +3,17 @@ import { Component, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , RouterModule],
+  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , RouterModule ,
+    NzButtonModule,
+    NzCardModule
+  ],
   standalone: true
 
 })

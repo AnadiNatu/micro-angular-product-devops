@@ -8,6 +8,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { HeaderComponent } from '../header/header.component';
 import { Subject } from 'rxjs';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
 interface MenuItem {
   label: string;
   icon: string;
@@ -21,7 +24,7 @@ interface MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, RouterModule, CommonModule]
+  imports: [RouterLink, RouterLinkActive, RouterModule, CommonModule , NzButtonModule , NzIconModule , NzMenuModule]
 })
 export class SidebarComponent implements OnInit , OnDestroy {
 
@@ -168,4 +171,16 @@ export class SidebarComponent implements OnInit , OnDestroy {
   testClick(): void {
   console.log('Sidebar clicked');
 }
+
+hasActiveChild(item: MenuItem): boolean {
+
+    if (!item.children?.length) {
+      return false;
+    }
+
+    return item.children.some(
+      child => this.isActive(child.route)
+    );
+  }
 }
+// Hey chat this component is not using any of the endpoints from the ProfileController . Need to add the endpoints to the service and the component as well. 

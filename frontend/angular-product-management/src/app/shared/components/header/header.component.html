@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm">
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm">
   <div class="container-fluid px-4">
     <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/auth/home">
       <div class="brand-icon text-white rounded p-2">
@@ -16,7 +16,6 @@
           </div>
         </div>
 
-        <!-- Always-visible logout button in navbar -->
         <button
           class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
           type="button"
@@ -25,7 +24,6 @@
           <span class="d-none d-md-inline">Logout</span>
         </button>
 
-        <!-- Avatar dropdown for profile -->
         <div class="dropdown">
           <button
             class="btn btn-link p-0 border-0"
@@ -79,4 +77,192 @@
       }
     </div>
   </div>
-</nav>
+</nav> -->
+
+<header class="app-header">
+
+  <div class="header-container">
+
+    <!-- Brand -->
+    <a
+      class="brand"
+      routerLink="/auth/home"
+      aria-label="OrderFlow Pro home"
+    >
+
+      <div class="brand-icon">
+        <span
+          nz-icon
+          nzType="appstore"
+          nzTheme="outline"
+        ></span>
+      </div>
+
+      <span class="brand-name">
+        OrderFlow Pro
+      </span>
+
+    </a>
+
+
+    <!-- Right side -->
+    <div class="header-actions">
+
+      @if (currentUser) {
+
+        <!-- User information -->
+        <div class="user-summary">
+
+          <div class="user-name">
+            {{ getFullName() }}
+          </div>
+
+          <div class="user-role">
+            {{ currentUser.role | titlecase }} Account
+          </div>
+
+        </div>
+
+
+        <!-- Logout button -->
+        <button
+          nz-button
+          nzType="default"
+          nzDanger
+          nzSize="small"
+          class="logout-button"
+          type="button"
+          (click)="logout()"
+        >
+          <span
+            nz-icon
+            nzType="logout"
+            nzTheme="outline"
+          ></span>
+
+          <span class="logout-label">
+            Logout
+          </span>
+        </button>
+
+
+        <!-- User avatar / dropdown -->
+        <div
+          nz-dropdown
+          [nzDropdownMenu]="userMenu"
+          nzPlacement="bottomRight"
+          [nzTrigger]="'click'"
+          class="user-menu-trigger"
+        >
+
+          @if (currentUser.avatar) {
+
+            <nz-avatar
+              [nzSize]="44"
+              [nzSrc]="currentUser.avatar"
+              [nzAlt]="getFullName()"
+              class="user-avatar"
+            ></nz-avatar>
+
+          } @else {
+
+            <nz-avatar
+              [nzSize]="44"
+              [nzText]="getInitials()"
+              class="user-avatar avatar-fallback"
+            ></nz-avatar>
+
+          }
+
+        </div>
+
+
+        <!-- User dropdown menu -->
+        <nz-dropdown-menu #userMenu="nzDropdownMenu">
+
+          <ul
+            nz-menu
+            class="user-dropdown"
+          >
+
+            <!-- User information -->
+            <li
+              nz-menu-item
+              class="user-dropdown-header"
+              nzDisabled
+            >
+
+              <div class="dropdown-user-name">
+                {{ getFullName() }}
+              </div>
+
+              <div class="dropdown-user-email">
+                {{ currentUser.email }}
+              </div>
+
+            </li>
+
+
+            <!-- Profile -->
+            <li
+              nz-menu-item
+              [routerLink]="getProfileRoute()"
+            >
+              <span
+                nz-icon
+                nzType="user"
+                nzTheme="outline"
+              ></span>
+
+              <span>My Profile</span>
+            </li>
+
+
+            <li nz-menu-divider></li>
+
+
+            <!-- Logout -->
+            <li
+              nz-menu-item
+              class="logout-menu-item"
+              (click)="logout()"
+            >
+              <span
+                nz-icon
+                nzType="logout"
+                nzTheme="outline"
+              ></span>
+
+              <span>Logout</span>
+            </li>
+
+          </ul>
+
+        </nz-dropdown-menu>
+
+      } @else {
+
+        <!-- Login -->
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="small"
+          routerLink="/auth/login"
+          class="login-button"
+        >
+          <span
+            nz-icon
+            nzType="login"
+            nzTheme="outline"
+          ></span>
+
+          <span>Login</span>
+        </button>
+
+      }
+
+    </div>
+
+  </div>
+
+</header>

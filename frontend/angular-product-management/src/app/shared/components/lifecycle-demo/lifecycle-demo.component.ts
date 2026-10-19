@@ -17,13 +17,27 @@ import { RouterLink } from '@angular/router';
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 
 @Component({
   selector: 'app-lifecycle-demo',
   templateUrl: './lifecycle-demo.component.html',
   styleUrls: ['./lifecycle-demo.component.css'],
   standalone: true,
-  imports: [RouterLink, CommonModule, HighlightDirective]
+  imports: [RouterLink, CommonModule, HighlightDirective, 
+
+    NzAlertModule,
+    NzButtonModule,
+    NzCardModule,
+    NzCollapseModule,
+    NzIconModule,
+    NzStatisticModule
+  ]
 })
 export class LifecycleDemoComponent
   implements OnInit, OnDestroy, OnChanges, DoCheck,
@@ -34,7 +48,8 @@ export class LifecycleDemoComponent
 
   lifecycleLogs: string[] = [];
   counter: number = 0;
-  private intervalId: any;
+  // private intervalId: any;
+  private intervalId : ReturnType<typeof setInterval> |  undefined;
 
   constructor() {
     this.log('🔧 constructor() - Component instance created');

@@ -1,5 +1,5 @@
 /* Profile Component Styles */
-.profile-container {
+/* .profile-container {
   min-height: calc(100vh - 64px);
   background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
 }
@@ -33,10 +33,10 @@
   font-size: 0.875rem;
   color: #dc3545;
   margin-top: 0.25rem;
-}
+} */
 
 /* Avatar Upload Button */
-.cursor-pointer {
+/* .cursor-pointer {
   cursor: pointer;
 }
 
@@ -46,10 +46,10 @@ label[for] {
 
 label[for]:hover {
   transform: scale(1.05);
-}
+} */
 
 /* Buttons */
-.btn-sm {
+/* .btn-sm {
   padding: 0.4rem 1rem;
   font-size: 0.875rem;
   border-radius: 8px;
@@ -57,25 +57,726 @@ label[for]:hover {
 
 .btn-group-sm .btn {
   font-weight: 500;
-}
+} */
 
 /* Form Labels */
-.form-label {
+/* .form-label {
   color: #4b5563;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
-}
+} */
 
 /* Badge */
-.badge {
+/* .badge {
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   font-weight: 600;
-}
+} */
 
 /* Responsive */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .profile-container {
     padding: 1rem;
   }
+} */
+/* =========================================================
+   Profile Component
+   NG-ZORRO based styling
+   ========================================================= */
+
+:host {
+  display: block;
+}
+
+
+/* =========================================================
+   Page
+   ========================================================= */
+
+.profile-container {
+  min-height: calc(100vh - 68px);
+
+  padding: 2rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f5f7fa 0%,
+      #eef2f7 100%
+    );
+
+  box-sizing: border-box;
+}
+
+.profile-wrapper {
+  width: 100%;
+  max-width: 1000px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   Main Card
+   ========================================================= */
+
+.profile-card {
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.07);
+}
+
+
+/* =========================================================
+   Profile Header
+   ========================================================= */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+
+  margin:
+    -24px
+    -24px
+    0;
+
+  padding: 1.25rem 1.5rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6 0%,
+      #2563eb 100%
+    );
+
+  color: #ffffff;
+}
+
+.profile-header-content {
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+
+  min-width: 0;
+}
+
+.profile-header-icon {
+  width: 46px;
+  height: 46px;
+
+  flex: 0 0 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  backdrop-filter: blur(6px);
+}
+
+.profile-header-icon span {
+  font-size: 22px;
+}
+
+.profile-title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 1.25rem;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+.profile-subtitle {
+  margin: 0.25rem 0 0;
+
+  color: rgba(255, 255, 255, 0.8);
+
+  font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   Header Actions
+   ========================================================= */
+
+.profile-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  flex-wrap: wrap;
+}
+
+.profile-actions button {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  border-radius: 8px;
+}
+
+.profile-actions button:first-child {
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Body
+   ========================================================= */
+
+.profile-body {
+  padding-top: 2rem;
+}
+
+
+/* =========================================================
+   Identity
+   ========================================================= */
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+
+  padding: 0.5rem 0 1rem;
+}
+
+.avatar-wrapper {
+  position: relative;
+
+  display: inline-flex;
+}
+
+.profile-avatar {
+  border: 4px solid #ffffff;
+
+  box-shadow:
+    0 6px 18px rgba(37, 99, 235, 0.2);
+
+  background: #eff6ff;
+}
+
+.avatar-upload {
+  position: absolute;
+
+  right: 2px;
+  bottom: 4px;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #ffffff;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #2563eb
+    );
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.avatar-upload:hover {
+  transform: scale(1.08);
+
+  box-shadow:
+    0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.avatar-upload span {
+  font-size: 16px;
+}
+
+.identity-details {
+  margin-top: 1rem;
+}
+
+.user-name {
+  margin: 0;
+
+  color: #1f2937;
+
+  font-size: 1.25rem;
+
+  font-weight: 700;
+}
+
+.account-role {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  margin-top: 0.45rem;
+
+  color: #6b7280;
+
+  font-size: 0.85rem;
+}
+
+.account-role span[nz-icon] {
+  color: #2563eb;
+}
+
+
+/* =========================================================
+   Section Heading
+   ========================================================= */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1.25rem;
+}
+
+.section-title {
+  margin: 0;
+
+  color: #1f2937;
+
+  font-size: 1.05rem;
+
+  font-weight: 650;
+}
+
+.section-description {
+  margin: 0.25rem 0 0;
+
+  color: #8c8c8c;
+
+  font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   Form
+   ========================================================= */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0 1.25rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+nz-form-item {
+  margin-bottom: 1.1rem;
+}
+
+:host ::ng-deep .ant-form-item-label {
+  padding-bottom: 6px;
+}
+
+:host ::ng-deep .ant-form-item-label > label {
+  color: #4b5563;
+
+  font-size: 0.86rem;
+
+  font-weight: 600;
+}
+
+:host ::ng-deep .ant-form-item-label span[nz-icon] {
+  margin-right: 0.35rem;
+
+  color: #2563eb;
+}
+
+:host ::ng-deep .ant-input {
+  min-height: 42px;
+
+  border-radius: 8px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .ant-input:focus,
+:host ::ng-deep .ant-input-focused {
+  border-color: #3b82f6;
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+:host ::ng-deep .ant-input[disabled] {
+  color: #595959;
+
+  background: #f8fafc;
+
+  cursor: not-allowed;
+}
+
+:host ::ng-deep .ant-input[readonly] {
+  background: #f8fafc;
+}
+
+.field-hint {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.3rem;
+
+  margin-top: 0.35rem;
+
+  color: #8c8c8c;
+
+  font-size: 0.74rem;
+}
+
+.field-hint span[nz-icon] {
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   Account Information
+   ========================================================= */
+
+.account-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+.account-info-card {
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+
+  padding: 1.1rem;
+
+  border: 1px solid #f0f0f0;
+
+  border-radius: 12px;
+
+  background: #fafafa;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.account-info-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d9d9d9;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 5px 16px rgba(0, 0, 0, 0.05);
+}
+
+.account-info-icon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+}
+
+.account-info-icon span {
+  font-size: 19px;
+}
+
+.id-icon {
+  color: #2563eb;
+
+  background: #eff6ff;
+}
+
+.role-icon {
+  color: #7c3aed;
+
+  background: #f5f3ff;
+}
+
+.account-info-content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.3rem;
+
+  min-width: 0;
+}
+
+.account-info-label {
+  color: #8c8c8c;
+
+  font-size: 0.75rem;
+}
+
+.account-info-value {
+  color: #1f2937;
+
+  font-size: 1rem;
+
+  font-weight: 650;
+}
+
+.account-role-tag {
+  width: fit-content;
+
+  margin: 0;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Logout Section
+   ========================================================= */
+
+.logout-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+
+  padding: 1.25rem;
+
+  border: 1px solid #fee2e2;
+
+  border-radius: 12px;
+
+  background: #fffafa;
+}
+
+.logout-content {
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+}
+
+.logout-icon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #dc2626;
+
+  background: #fee2e2;
+}
+
+.logout-icon span {
+  font-size: 19px;
+}
+
+.logout-content h3 {
+  margin: 0;
+
+  color: #991b1b;
+
+  font-size: 0.95rem;
+
+  font-weight: 650;
+}
+
+.logout-content p {
+  margin: 0.25rem 0 0;
+
+  color: #8c8c8c;
+
+  font-size: 0.76rem;
+}
+
+.logout-section button {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+}
+
+
+/* =========================================================
+   Divider
+   ========================================================= */
+
+:host ::ng-deep .ant-divider {
+  margin:
+    1.75rem
+    0;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .profile-container {
+    padding: 1.25rem;
+  }
+
+  .profile-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .profile-actions {
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .logout-section {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .logout-section button {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+}
+
+
+@media (max-width: 520px) {
+
+  .profile-container {
+    padding: 0.75rem;
+  }
+
+  .profile-header {
+    margin:
+      -16px
+      -16px
+      0;
+
+    padding: 1rem;
+  }
+
+  .profile-title {
+    font-size: 1.05rem;
+  }
+
+  .profile-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .profile-actions {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    width: 100%;
+  }
+
+  .profile-actions button {
+    justify-content: center;
+  }
+
+  .profile-actions button:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .profile-body {
+    padding-top: 1.5rem;
+  }
+
+  .logout-content {
+    align-items: flex-start;
+  }
+
+  .logout-content h3 {
+    font-size: 0.88rem;
+  }
+
 }

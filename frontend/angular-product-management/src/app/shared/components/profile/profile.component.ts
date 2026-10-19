@@ -7,6 +7,15 @@ import { RouterLink } from '@angular/router';
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 
 @Component({
@@ -14,7 +23,17 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, 
+     NzAvatarModule,
+    NzButtonModule,
+    NzCardModule,
+    NzDividerModule,
+    NzFormModule,
+    NzIconModule,
+    NzInputModule,
+    NzMessageModule,
+    NzTagModule
+  ]
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
@@ -24,7 +43,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private message: NzMessageModule
   ) {}
 
   ngOnInit(): void {
@@ -61,15 +81,26 @@ export class ProfileComponent implements OnInit {
 
   saveProfile(): void {
     if (this.profileForm.invalid) {
-      Object.keys(this.profileForm.controls).forEach(k => this.profileForm.get(k)?.markAsTouched());
+      
+      Object
+      .keys(this.profileForm.controls)
+      .forEach(k => this.profileForm.get(k)?.markAsTouched());
+      
       return;
     }
     const v = this.profileForm.getRawValue();
+
     if (this.currentUser) {
-      const updated: User = { ...this.currentUser, fname: v.fname, lname: v.lname, phoneNumber: v.phoneNumber, avatar: this.uploadedImage || this.currentUser.avatar };
+      const updated: User = { 
+        ...this.currentUser, 
+        fname: v.fname, 
+        lname: v.lname, 
+        phoneNumber: v.phoneNumber, 
+        avatar: this.uploadedImage || this.currentUser.avatar };
       this.authService.updateUser(updated);
       this.currentUser = updated;
       alert('Profile updated successfully!');
+      // this.message.success('Profile updated successfully!' , {nzDuration: 3000});
     }
     this.toggleEditMode();
   }
@@ -78,13 +109,33 @@ export class ProfileComponent implements OnInit {
     this.authService.logout();
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => { this.uploadedImage = e.target.result; };
-      reader.readAsDataURL(file);
+  onFileSelected(event: Event): void {
+    // const file = event.target.files[0];
+    // if (file) {
+    //   const reader = new FileReader();
+    //   reader.onload = (e: any) => { 
+    //     this.uploadedImage = e.target.result; };
+    //   reader.readAsDataURL(file);
+    // }
+
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file){
+      return;
     }
+
+    if(!file.type.startsWith('image/')){
+      alert('Please select a valid image file.');
+
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.uploadedImage = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   hasError(f: string): boolean {

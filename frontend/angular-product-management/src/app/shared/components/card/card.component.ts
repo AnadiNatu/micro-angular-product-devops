@@ -5,13 +5,17 @@ import { RouterLink } from '@angular/router';
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
   standalone: true,
-  imports: [RouterLink, CommonModule, HighlightDirective]
+  imports: [RouterLink, CommonModule, HighlightDirective , NzCardModule , NzButtonModule , NzIconModule , NzTagModule]
 })
 export class CardComponent {
   @Input({ required: true }) title: string = '';

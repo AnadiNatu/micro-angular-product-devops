@@ -5,12 +5,25 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { ResetPasswordRequest } from '../../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective],
+  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective , 
+      NzAlertModule,
+    NzButtonModule,
+    NzCardModule,
+    NzFormModule,
+    NzIconModule,
+    NzInputModule
+  ],
   standalone: true
 })
 export class ResetPasswordComponent {
@@ -114,17 +127,50 @@ export class ResetPasswordComponent {
     return '';
   }
 
-  private getFieldLabel(fieldName: string): string {
-    const labels: { [key: string]: string } = {
+ 
+
+  getPasswordMismatchError(): string {
+
+    if (
+      this.resetPasswordForm.hasError(
+        'passwordMismatch'
+      ) &&
+      this.resetPasswordForm
+        .get('confirmPassword')
+        ?.touched
+    ) {
+
+      return 'Passwords do not match';
+    }
+
+    return '';
+  }
+
+
+  private getFieldLabel(
+    fieldName: string
+  ): string {
+
+    const labels: {
+      [key: string]: string
+    } = {
+
       email: 'Email',
+
       token: 'Reset token',
+
       newPassword: 'New password',
+
       confirmPassword: 'Confirm password'
+
     };
+
     return labels[fieldName] || fieldName;
   }
+
 
   goToLogin(): void {
     this.router.navigate(['/auth/login']);
   }
 }
+// Hey chat can you please add 3D animations to my user pages , use more shadow , outline and other 3d effect css properties to make the user UI very new and fresh and something of this age. 

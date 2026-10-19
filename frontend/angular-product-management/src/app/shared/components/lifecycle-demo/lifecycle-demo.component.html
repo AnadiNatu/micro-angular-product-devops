@@ -1,5 +1,4 @@
-<!-- Lifecycle Demo Component -->
-<div class="lifecycle-demo-container p-4">
+<!-- <div class="lifecycle-demo-container p-4">
   <div class="card border-0 shadow-sm">
     <div class="card-header bg-warning text-dark">
       <h5 class="mb-0">
@@ -9,14 +8,12 @@
     </div>
     
     <div class="card-body">
-      <!-- Info Section -->
       <div class="alert alert-info mb-4">
         <i class="bi bi-info-circle me-2"></i>
         <strong>Educational Component:</strong> This component demonstrates all 8 Angular lifecycle hooks.
         Open the browser console to see detailed logs.
       </div>
 
-      <!-- Counter Display -->
       <div class="row mb-4">
         <div class="col-md-6">
           <div class="p-3 bg-light rounded">
@@ -33,7 +30,6 @@
         </div>
       </div>
 
-      <!-- Lifecycle Logs -->
       <div class="lifecycle-logs">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h6 class="mb-0">Lifecycle Event Logs</h6>
@@ -53,11 +49,9 @@
         </div>
       </div>
 
-      <!-- Hook Descriptions -->
       <div class="mt-4">
         <h6 class="mb-3">Lifecycle Hook Descriptions</h6>
         <div class="accordion" id="lifecycleAccordion">
-          <!-- Constructor -->
           <div class="accordion-item">
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#constructor">
@@ -73,7 +67,6 @@
             </div>
           </div>
 
-          <!-- ngOnInit -->
           <div class="accordion-item">
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ngOnInit">
@@ -89,7 +82,6 @@
             </div>
           </div>
 
-          <!-- ngOnDestroy -->
           <div class="accordion-item">
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ngOnDestroy">
@@ -108,4 +100,318 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div class="lifecycle-demo-container">
+
+  <nz-card class="lifecycle-card">
+
+    <!-- =====================================================
+         Header
+         ===================================================== -->
+
+    <div class="demo-header">
+
+      <div class="demo-title-wrapper">
+
+        <div class="demo-title-icon">
+          <span
+            nz-icon
+            nzType="deployment-unit"
+            nzTheme="outline"
+          ></span>
+        </div>
+
+        <div>
+          <h2 class="demo-title">
+            Angular Lifecycle Hooks Demo
+          </h2>
+
+          <p class="demo-subtitle">
+            Interactive demonstration of Angular component lifecycle events
+          </p>
+        </div>
+
+      </div>
+
+      <nz-tag
+        nzColor="gold"
+        class="demo-tag"
+      >
+        Educational
+      </nz-tag>
+
+    </div>
+
+
+    <!-- =====================================================
+         Information Alert
+         ===================================================== -->
+
+    <nz-alert
+      nzType="info"
+      nzShowIcon
+      nzMessage="Educational Component"
+      nzDescription="This component demonstrates all 8 Angular lifecycle hooks. Open the browser console to see detailed logs."
+      class="lifecycle-alert"
+    ></nz-alert>
+
+
+    <!-- =====================================================
+         Counter / Input Information
+         ===================================================== -->
+
+    <div class="metrics-grid">
+
+      <!-- Counter -->
+      <div class="metric-card">
+
+        <div class="metric-icon counter-icon">
+          <span
+            nz-icon
+            nzType="field-time"
+            nzTheme="outline"
+          ></span>
+        </div>
+
+        <div class="metric-content">
+
+          <div class="metric-label">
+            Counter
+          </div>
+
+          <div class="metric-description">
+            Updates every 2 seconds
+          </div>
+
+          <nz-statistic
+            [nzValue]="counter"
+            class="metric-value"
+          ></nz-statistic>
+
+        </div>
+
+      </div>
+
+
+      <!-- Input Data -->
+      <div class="metric-card">
+
+        <div class="metric-icon input-icon">
+          <span
+            nz-icon
+            nzType="database"
+            nzTheme="outline"
+          ></span>
+        </div>
+
+        <div class="metric-content">
+
+          <div class="metric-label">
+            Input Data
+          </div>
+
+          <div class="metric-description">
+            Current @Input() value
+          </div>
+
+          <div class="input-value">
+            {{ demoData }}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Lifecycle Logs
+         ===================================================== -->
+
+    <section class="lifecycle-logs">
+
+      <div class="section-header">
+
+        <div>
+          <h3 class="section-title">
+            Lifecycle Event Logs
+          </h3>
+
+          <p class="section-description">
+            Events generated by the Angular lifecycle hooks
+          </p>
+        </div>
+
+        <button
+          nz-button
+          nzType="default"
+          nzSize="small"
+          (click)="clearLogs()"
+        >
+          <span
+            nz-icon
+            nzType="delete"
+            nzTheme="outline"
+          ></span>
+
+          <span>Clear Logs</span>
+        </button>
+
+      </div>
+
+
+      <!-- Log Console -->
+      <div class="log-container">
+
+        @if (lifecycleLogs.length > 0) {
+
+          @for (log of lifecycleLogs; track $index) {
+
+            <div class="log-entry">
+              <span class="log-prompt">&gt;</span>
+              <span>{{ log }}</span>
+            </div>
+
+          }
+
+        } @else {
+
+          <div class="empty-logs">
+
+            <span
+              nz-icon
+              nzType="file-search"
+              nzTheme="outline"
+            ></span>
+
+            <span>
+              No lifecycle events logged yet...
+            </span>
+
+          </div>
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         Lifecycle Hook Descriptions
+         ===================================================== -->
+
+    <section class="hook-descriptions">
+
+      <div class="section-heading">
+
+        <div>
+          <h3 class="section-title">
+            Lifecycle Hook Descriptions
+          </h3>
+
+          <p class="section-description">
+            Expand a hook to learn about its purpose and recommended usage.
+          </p>
+        </div>
+
+      </div>
+
+
+      <nz-collapse
+        nzAccordion
+        class="lifecycle-collapse"
+      >
+
+        <!-- Constructor -->
+
+        <nz-collapse-panel
+          nzHeader="🔧 constructor()"
+        >
+
+          <div class="hook-content">
+
+            <div class="hook-row">
+              <strong>Purpose:</strong>
+              <span>Component instantiation</span>
+            </div>
+
+            <div class="hook-row">
+              <strong>Use for:</strong>
+              <span>Dependency injection, basic initialization</span>
+            </div>
+
+            <div class="hook-row warning">
+              <strong>Avoid:</strong>
+              <span>Complex logic, HTTP calls, DOM manipulation</span>
+            </div>
+
+          </div>
+
+        </nz-collapse-panel>
+
+
+        <!-- ngOnInit -->
+
+        <nz-collapse-panel
+          nzHeader="✅ ngOnInit()"
+        >
+
+          <div class="hook-content">
+
+            <div class="hook-row">
+              <strong>Purpose:</strong>
+              <span>Component initialization (called once)</span>
+            </div>
+
+            <div class="hook-row">
+              <strong>Use for:</strong>
+              <span>HTTP calls, subscriptions, complex initialization</span>
+            </div>
+
+            <div class="hook-row success">
+              <strong>Best Practice:</strong>
+              <span>Most initialization logic goes here</span>
+            </div>
+
+          </div>
+
+        </nz-collapse-panel>
+
+
+        <!-- ngOnDestroy -->
+
+        <nz-collapse-panel
+          nzHeader="🗑️ ngOnDestroy()"
+        >
+
+          <div class="hook-content">
+
+            <div class="hook-row">
+              <strong>Purpose:</strong>
+              <span>Cleanup before component destruction</span>
+            </div>
+
+            <div class="hook-row">
+              <strong>Use for:</strong>
+              <span>Unsubscribe observables, clear timers, remove listeners</span>
+            </div>
+
+            <div class="hook-row critical">
+              <strong>Critical:</strong>
+              <span>Prevents memory leaks</span>
+            </div>
+
+          </div>
+
+        </nz-collapse-panel>
+
+      </nz-collapse>
+
+    </section>
+
+  </nz-card>
+
 </div>

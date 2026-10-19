@@ -1,4 +1,4 @@
- <div class="user-products">
+ <!-- <div class="user-products">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2 class="mb-1 fw-bold">
@@ -8,7 +8,6 @@
         </div>
       </div>
 
-      <!-- Search & Filter -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
           <div class="row g-3">
@@ -31,7 +30,6 @@
         </div>
       </div>
 
-      <!-- Products Grid -->
       @if (isLoading) {
         <div class="text-center py-5">
           <div class="spinner-border text-primary" role="status"></div>
@@ -78,4 +76,421 @@
           <button class="btn btn-outline-primary btn-sm" (click)="clearFilters()">Clear Filters</button>
         </div>
       }
+    </div> -->
+
+<div class="products-page">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
+  <section class="products-hero">
+
+    <div class="hero-content">
+
+      <div class="hero-icon">
+        <span nz-icon nzType="shopping" nzTheme="outline"></span>
+      </div>
+
+      <div>
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          PRODUCT MARKETPLACE
+        </div>
+
+        <h1>
+          Browse Products
+        </h1>
+
+        <p>
+          Welcome back,
+          <strong>{{ userName }}</strong>.
+          Find everything you need in one place.
+        </p>
+      </div>
+
     </div>
+
+    <div class="hero-decoration">
+      <div class="hero-ring ring-one"></div>
+      <div class="hero-ring ring-two"></div>
+      <div class="hero-cube">
+        <span nz-icon nzType="appstore" nzTheme="outline"></span>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       SEARCH / FILTER PANEL
+       ===================================================== -->
+
+  <section class="filter-panel">
+
+    <div class="filter-panel-header">
+
+      <div>
+        <span class="filter-label">
+          <span nz-icon nzType="filter" nzTheme="outline"></span>
+          Discover
+        </span>
+
+        <h2>Find your product</h2>
+      </div>
+
+      <div class="result-counter">
+        <span class="counter-number">
+          {{ filtered.length }}
+        </span>
+
+        <span class="counter-label">
+          of {{ products.length }} products
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="filter-controls">
+
+      <!-- Search -->
+
+      <div class="search-field">
+
+        <label>
+          Search products
+        </label>
+
+        <nz-input-group
+          nzPrefixIcon="search"
+          class="modern-input"
+        >
+          <input
+            nz-input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="filterProducts()"
+            placeholder="Search by product name or description..."
+          />
+        </nz-input-group>
+
+      </div>
+
+
+      <!-- Category -->
+
+      <div class="category-field">
+
+        <label>
+          Category
+        </label>
+
+        <nz-select
+          class="modern-select"
+          nzSize="large"
+          [(ngModel)]="selectedCategory"
+          (ngModelChange)="filterProducts()"
+          nzPlaceHolder="Select category"
+        >
+
+          @for (cat of categories; track cat) {
+
+            <nz-option
+              [nzValue]="cat"
+              [nzLabel]="cat === 'all' ? 'All Categories' : cat"
+            ></nz-option>
+
+          }
+
+        </nz-select>
+
+      </div>
+
+
+      <!-- Clear -->
+
+      <div class="clear-field">
+
+        <label>&nbsp;</label>
+
+        <button
+          nz-button
+          nzType="default"
+          nzSize="large"
+          class="clear-button"
+          (click)="clearFilters()"
+        >
+          <span
+            nz-icon
+            nzType="clear"
+            nzTheme="outline"
+          ></span>
+
+          Clear
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  @if (isLoading) {
+
+    <section class="loading-state">
+
+      <div class="loading-card">
+
+        <div class="loading-orbit">
+          <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+        </div>
+
+        <h3>Loading products</h3>
+
+        <p>
+          We're getting the latest products ready for you.
+        </p>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- =====================================================
+       PRODUCT GRID
+       ===================================================== -->
+
+  @if (!isLoading && filtered.length > 0) {
+
+    <section class="products-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">
+            COLLECTION
+          </span>
+
+          <h2>
+            Available Products
+          </h2>
+        </div>
+
+        <div class="product-count">
+          {{ filtered.length }}
+          {{ filtered.length === 1 ? 'product' : 'products' }}
+        </div>
+
+      </div>
+
+
+      <div class="product-grid">
+
+        @for (product of filtered; track product.productId) {
+
+          <article class="product-card">
+
+            <!-- Card depth layers -->
+
+            <div class="card-depth depth-one"></div>
+            <div class="card-depth depth-two"></div>
+
+
+            <!-- Product image -->
+
+            <div class="product-image-container">
+
+              @if (product.image) {
+
+                <img
+                  [src]="product.image"
+                  [alt]="product.productName"
+                  class="product-image"
+                />
+
+              } @else {
+
+                <div class="product-image-placeholder">
+
+                  <div class="placeholder-icon">
+                    <span
+                      nz-icon
+                      nzType="inbox"
+                      nzTheme="outline"
+                    ></span>
+                  </div>
+
+                  <span>No image</span>
+
+                </div>
+
+              }
+
+
+              <!-- Floating category -->
+
+              @if (product.category) {
+
+                <nz-tag
+                  nzColor="blue"
+                  class="category-tag"
+                >
+                  {{ product.category }}
+                </nz-tag>
+
+              }
+
+            </div>
+
+
+            <!-- Product information -->
+
+            <div class="product-body">
+
+              <h3
+                class="product-title"
+                [title]="product.productName"
+              >
+                {{ product.productName }}
+              </h3>
+
+
+              <p
+                class="product-description"
+                [title]="product.description"
+              >
+                {{ product.description | slice:0:80 }}...
+              </p>
+
+
+              <div class="product-divider"></div>
+
+
+              <div class="product-footer">
+
+                <div class="price-section">
+
+                  <span class="price-label">
+                    PRICE
+                  </span>
+
+                  <span class="product-price">
+                    {{ product.price | customCurrency }}
+                  </span>
+
+                </div>
+
+
+                @if (product.stockQuantity > 0) {
+
+                  <nz-tag
+                    nzColor="success"
+                    class="stock-tag"
+                  >
+                    <span
+                      nz-icon
+                      nzType="check-circle"
+                      nzTheme="fill"
+                    ></span>
+
+                    In Stock
+                    <span class="stock-number">
+                      {{ product.stockQuantity }}
+                    </span>
+                  </nz-tag>
+
+                } @else {
+
+                  <nz-tag
+                    nzColor="error"
+                    class="stock-tag"
+                  >
+                    <span
+                      nz-icon
+                      nzType="close-circle"
+                      nzTheme="fill"
+                    ></span>
+
+                    Out of Stock
+                  </nz-tag>
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- Bottom shine -->
+
+            <div class="card-shine"></div>
+
+          </article>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- =====================================================
+       EMPTY STATE
+       ===================================================== -->
+
+  @if (!isLoading && filtered.length === 0) {
+
+    <section class="empty-state">
+
+      <div class="empty-card">
+
+        <div class="empty-icon">
+
+          <span
+            nz-icon
+            nzType="inbox"
+            nzTheme="outline"
+          ></span>
+
+        </div>
+
+        <h2>No products found</h2>
+
+        <p>
+          We couldn't find anything matching your current
+          search or category.
+        </p>
+
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="large"
+          class="empty-button"
+          (click)="clearFilters()"
+        >
+          <span
+            nz-icon
+            nzType="reload"
+            nzTheme="outline"
+          ></span>
+
+          Clear Filters
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+</div>

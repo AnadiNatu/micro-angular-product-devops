@@ -197,4 +197,23 @@ export class AuthService {
   isUser(): boolean {
     return this.getUserRole() === UserRole.USER;
   }
+
+  // api/email/send/simple (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/email/send/html (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/email/send/welcome  (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/email/send/otp (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/notifications/otp/dual  (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/notifications/welcome  (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/notifications/password-reset-otp (Return - Map<String , Object> , Takes - Map<String , Object>) 
+  // api/notifications/login-alert (Return - Map<String , Object> , Takes - Map<String , Object>)
+  // api/otp/send/email (Return - Map<String , Object> , Takes - email as String parameter)
+  // api/otp/verify/email (Return - Map<String , Object> , Takes - email as String, otp as String parameter)
+  // api/otp/send/sms (Return - Map<String , Object> , Takes - phoneNumber as String parameter)
+  // api/otp/verify/sms (Return - Map<String , Object> , Takes - phoneNumber as String, otp as String parameter)
+  // api/password/change (Return - Map<String , Object> , Takes - email as String parameter and method as String parameter)
+  // api/auth/phone/send-otp (Return - Map<String , Object> , Takes - phoneNumber as String parameter)
+  // api/auth/phone/verify-otp (Return - Map<String , Object> , Takes - phoneNumber as String, otp as String parameter)
+  // api/profile/photo {GET,POST,DELETE} (Return - Map<String , Object> , Takes - photo as MultipartFile parameter)
+  // api/profile/me (Return - Map<String , Object> , Takes - Map<String , Object> parameter {can change username , phone number})
+  
 }

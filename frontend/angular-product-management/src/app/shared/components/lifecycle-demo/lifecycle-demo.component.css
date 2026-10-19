@@ -1,5 +1,5 @@
 /* Lifecycle Demo Component Styles */
-.lifecycle-demo-container {
+/* .lifecycle-demo-container {
   background: #f8f9fa;
   min-height: 400px;
 }
@@ -51,4 +51,567 @@
 
 .log-container::-webkit-scrollbar-thumb:hover {
   background: #64748b;
+} */
+/* =========================================================
+   Lifecycle Demo Component
+   NG-ZORRO based styling
+   ========================================================= */
+
+:host {
+  display: block;
+}
+
+
+/* =========================================================
+   Main Container
+   ========================================================= */
+
+.lifecycle-demo-container {
+  min-height: 400px;
+
+  padding: 1.5rem;
+
+  background: #f8fafc;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   Main Card
+   ========================================================= */
+
+.lifecycle-card {
+  width: 100%;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.demo-title-wrapper {
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+}
+
+.demo-title-icon {
+  width: 46px;
+  height: 46px;
+
+  flex: 0 0 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  color: #92400e;
+
+  background: #fef3c7;
+}
+
+.demo-title-icon span {
+  font-size: 22px;
+}
+
+.demo-title {
+  margin: 0;
+
+  color: #1f2937;
+
+  font-size: 1.25rem;
+
+  font-weight: 650;
+
+  line-height: 1.4;
+}
+
+.demo-subtitle {
+  margin: 0.25rem 0 0;
+
+  color: #8c8c8c;
+
+  font-size: 0.85rem;
+}
+
+.demo-tag {
+  margin: 0;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Information Alert
+   ========================================================= */
+
+.lifecycle-alert {
+  margin-bottom: 1.5rem;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   Metrics
+   ========================================================= */
+
+.metrics-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 1rem;
+
+  padding: 1.25rem;
+
+  border: 1px solid #f0f0f0;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d9d9d9;
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   Metric Icons
+   ========================================================= */
+
+.metric-icon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+}
+
+.metric-icon span {
+  font-size: 20px;
+}
+
+.counter-icon {
+  color: #2563eb;
+
+  background: #eff6ff;
+}
+
+.input-icon {
+  color: #7c3aed;
+
+  background: #f5f3ff;
+}
+
+
+/* =========================================================
+   Metric Content
+   ========================================================= */
+
+.metric-content {
+  min-width: 0;
+}
+
+.metric-label {
+  color: #1f2937;
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+}
+
+.metric-description {
+  margin-top: 2px;
+
+  color: #8c8c8c;
+
+  font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   NG-ZORRO Statistic
+   ========================================================= */
+
+.metric-value {
+  display: block;
+
+  margin-top: 0.5rem;
+}
+
+:host ::ng-deep .metric-value .ant-statistic-content {
+  color: #2563eb;
+
+  font-size: 1.5rem;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+/* =========================================================
+   Input Value
+   ========================================================= */
+
+.input-value {
+  max-width: 100%;
+
+  margin-top: 0.5rem;
+
+  overflow: hidden;
+
+  color: #7c3aed;
+
+  font-size: 1.15rem;
+
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   Sections
+   ========================================================= */
+
+.lifecycle-logs,
+.hook-descriptions {
+  margin-top: 1.5rem;
+}
+
+.section-header,
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  margin: 0;
+
+  color: #1f2937;
+
+  font-size: 1rem;
+
+  font-weight: 650;
+}
+
+.section-description {
+  margin: 0.25rem 0 0;
+
+  color: #8c8c8c;
+
+  font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   Log Container
+   ========================================================= */
+
+.log-container {
+  height: 300px;
+
+  max-height: 300px;
+
+  overflow-y: auto;
+
+  padding: 1rem;
+
+  border-radius: 10px;
+
+  background: #1e293b;
+
+  color: #e2e8f0;
+
+  font-family:
+    'Courier New',
+    Courier,
+    monospace;
+
+  font-size: 0.85rem;
+
+  line-height: 1.6;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================================
+   Log Entry
+   ========================================================= */
+
+.log-entry {
+  display: flex;
+
+  gap: 0.5rem;
+
+  padding: 0.2rem 0;
+
+  border-bottom: 1px solid #334155;
+
+  animation: fadeIn 0.3s ease;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-prompt {
+  flex: 0 0 auto;
+
+  color: #60a5fa;
+
+  user-select: none;
+}
+
+
+/* =========================================================
+   Empty Logs
+   ========================================================= */
+
+.empty-logs {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  color: #94a3b8;
+
+  text-align: center;
+}
+
+.empty-logs span[nz-icon] {
+  font-size: 24px;
+}
+
+
+/* =========================================================
+   Lifecycle Collapse
+   ========================================================= */
+
+.lifecycle-collapse {
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  border: 1px solid #f0f0f0;
+}
+
+
+/* =========================================================
+   Hook Content
+   ========================================================= */
+
+.hook-content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.75rem;
+
+  padding: 0.25rem 0;
+}
+
+.hook-row {
+  display: grid;
+
+  grid-template-columns: 100px minmax(0, 1fr);
+
+  gap: 1rem;
+
+  color: #595959;
+
+  font-size: 0.875rem;
+
+  line-height: 1.5;
+}
+
+.hook-row strong {
+  color: #262626;
+
+  font-weight: 600;
+}
+
+.hook-row.warning strong {
+  color: #d97706;
+}
+
+.hook-row.success strong {
+  color: #059669;
+}
+
+.hook-row.critical strong {
+  color: #dc2626;
+}
+
+
+/* =========================================================
+   Animation
+   ========================================================= */
+
+@keyframes fadeIn {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   Log Scrollbar
+   ========================================================= */
+
+.log-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.log-container::-webkit-scrollbar-track {
+  background: #0f172a;
+
+  border-radius: 4px;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background: #475569;
+
+  border-radius: 4px;
+}
+
+.log-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .lifecycle-demo-container {
+    padding: 1rem;
+  }
+
+  .demo-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .lifecycle-demo-container {
+    padding: 0.75rem;
+  }
+
+  .demo-title-wrapper {
+    align-items: flex-start;
+  }
+
+  .demo-title {
+    font-size: 1.05rem;
+  }
+
+  .demo-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+
+  .hook-row {
+    grid-template-columns: 1fr;
+
+    gap: 0.15rem;
+  }
+
 }

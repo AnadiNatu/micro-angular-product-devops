@@ -5,12 +5,25 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { ForgotPasswordRequest } from '../../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css'],
-  imports: [RouterLink, CommonModule , FormsModule, ReactiveFormsModule , HighlightDirective],
+  imports: [FormsModule, ReactiveFormsModule , HighlightDirective , 
+    NzAlertModule,
+    NzButtonModule,
+    NzCardModule,
+    NzFormModule,
+    NzIconModule,
+    NzInputModule
+  ],
   standalone: true
 })
 export class ForgotPasswordComponent {
@@ -22,7 +35,7 @@ export class ForgotPasswordComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    public router: Router
   ) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
@@ -53,9 +66,9 @@ export class ForgotPasswordComponent {
         console.log('Password reset email sent');
         
         // Redirect to login after 3 seconds
-        setTimeout(() => {
-          this.router.navigate(['/auth/login']);
-        }, 3000);
+        // setTimeout(() => {
+        //   this.router.navigate(['/auth/login']);
+        // }, 3000);
       },
       error: (error) => {
         this.isLoading = false;

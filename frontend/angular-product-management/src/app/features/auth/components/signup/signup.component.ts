@@ -8,13 +8,30 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { SignUpDTO } from '../../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 import { HighlightDirective } from '../../../../shared/directives/highlight.directive';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule, HighlightDirective]
+  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule, HighlightDirective , 
+     NzAlertModule,
+    NzButtonModule,
+    NzCardModule,
+    NzFormModule,
+    NzIconModule,
+    NzInputModule,
+    NzProgressModule,
+    NzTagModule
+  ]
 })
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
@@ -69,6 +86,20 @@ export class SignupComponent implements OnInit {
     const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
     return labels[this.passwordStrength] || '';
   }
+   getPasswordStrengthStatus():
+    'exception' | 'active' | 'success' | 'normal' {
+
+    if (this.passwordStrength <= 1) {
+      return 'exception';
+    }
+
+    if (this.passwordStrength <= 3) {
+      return 'active';
+    }
+
+    return 'success';
+  }
+
 
   getPasswordStrengthColor(): string {
     const colors = ['secondary', 'danger', 'warning', 'info', 'success', 'success'];
@@ -106,8 +137,9 @@ export class SignupComponent implements OnInit {
   }
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
-    if (field === 'password') this.showPassword = !this.showPassword;
-    else this.showConfirmPassword = !this.showConfirmPassword;
+    if (field === 'password'){ this.showPassword = !this.showPassword;}
+    else { this.showConfirmPassword = !this.showConfirmPassword;}
+
   }
 
   hasError(f: string): boolean {
